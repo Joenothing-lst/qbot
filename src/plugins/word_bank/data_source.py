@@ -13,13 +13,16 @@ NULL_BANK = dict(congruence={
 class WordBank(object):
 
     def __init__(self):
-        self.dir_path = os.path.abspath(os.path.join(__file__, "..", "data", "bank.json"))
+        self.dir_path = os.path.abspath(os.path.join(__file__, "..", "data"))
+        self.data_path = os.path.join(self.dir_path, "bank.json")
+
         if os.path.exists(self.dir_path):
-            print('读取词库位于 ' + self.dir_path)
-            with open(self.dir_path, 'r') as f:
+            print('读取词库位于 ' + self.data_path)
+            with open(self.data_path, 'r', encoding='utf-8') as f:
                 self.__data = json.load(f)
         else:
-            print('创建词库位于 ' + self.dir_path)
+            os.mkdir(self.dir_path)
+            print('创建词库位于 ' + self.data_path)
             self.__data = NULL_BANK
             self.__save()
 
@@ -47,7 +50,7 @@ class WordBank(object):
         """
         :return:
         """
-        with open(self.dir_path, 'w') as f:
+        with open(self.data_path, 'w', encoding='utf-8') as f:
             json.dump(self.__data, f)
 
     def set(self, index: int, key: str, value: str, flags: int = 0) -> bool:
