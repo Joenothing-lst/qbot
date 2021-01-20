@@ -13,7 +13,7 @@ NULL_BANK = dict(congruence={
 class WordBank(object):
 
     def __init__(self):
-        self.dir_path = os.path.abspath(os.path.join(__file__, "..", "./bank.json"))
+        self.dir_path = os.path.abspath(os.path.join(__file__, "..", "data", "bank.json"))
         if os.path.exists(self.dir_path):
             print('读取词库位于 ' + self.dir_path)
             with open(self.dir_path, 'r') as f:
