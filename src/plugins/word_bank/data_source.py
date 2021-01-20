@@ -37,7 +37,7 @@ class WordBank(object):
         """
         if isinstance(index, int):
             index = str(index)
-        reply = self.__data['congruence'].get(index, {}).get(msg, [])
+        reply = self.__data['congruence'].get(index, {}).get(msg, []) or self.__data['congruence'].get('0', {}).get(msg, [])
 
         if not flags or reply:
             return reply
