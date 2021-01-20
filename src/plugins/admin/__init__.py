@@ -59,31 +59,31 @@ async def first_receive(bot: Bot, state: T_State):
         qq_list = list(gen_qq(param))
         if cmd.to_user:
             for qq in qq_list[:-1]:
-                await bot.send_private_msg(user_id=qq, message=qq_list[-1])
+                await bot.send_private_msg(user_id=qq, message=unescape(qq_list[-1]))
         elif cmd.to_group:
             for qq in qq_list[:-1]:
-                await bot.send_group_msg(group_id=qq, message=qq_list[-1])
+                await bot.send_group_msg(group_id=qq, message=unescape(qq_list[-1]))
     elif cmd.all_group:
         group_list = await get_group_id_list(bot)
         if cmd.ban:
             qq_list = list(gen_qq(param))
             for qq in (i for i in group_list if i not in qq_list):
-                await bot.send_group_msg(group_id=qq, message=qq_list[-1])
+                await bot.send_group_msg(group_id=qq, message=unescape(qq_list[-1]))
         else:
             for qq in group_list:
-                await bot.send_group_msg(group_id=qq, message=param)
+                await bot.send_group_msg(group_id=qq, message=unescape(param))
     elif cmd.to_user:
         params = param.split(None, 1)
         if params[0] == params[-1]:
             await to_cmd.reject('缺少需要发送的消息\n' + __doc__)
         else:
-            await bot.send_private_msg(user_id=params[0], message=params[1])
+            await bot.send_private_msg(user_id=params[0], message=unescape(params[1]))
     elif cmd.to_group:
         params = param.split(None, 1)
         if params[0] == params[-1]:
             await to_cmd.reject('缺少需要发送的消息\n' + __doc__)
         else:
-            await bot.send_group_msg(group_id=params[0], message=params[1])
+            await bot.send_group_msg(group_id=params[0], message=unescape(params[1]))
 
     await to_cmd.finish(Message('[CQ:face,id=124]'))
 
