@@ -140,6 +140,6 @@ dmypy.json
 .pytype/
 
 # plugin data
-data/*.json
+word_bank/data/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
