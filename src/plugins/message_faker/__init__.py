@@ -42,9 +42,10 @@ async def fuck_forward(message, group_id, bot):
         .replace("&#91;", "[") \
         .replace("&#93;", "]") \
         .replace("&#44;", ",")
-    message_list = message.split('$', 1)
-    contents = re.findall('^(?:\[CQ:at,qq=)?(\d{5,})(?:])?([^|]+)?', message_list[0]) #=([^|]+)(?:\|)?$
-
+    message_list = message.split('^', 1)
+    print(message_list)
+    contents = re.findall('\[CQ:at,qq=(\d+).*?\](.*)', message_list[0]) #=([^|]+)(?:\|)?$
+    print(contents)
     for con in contents:
         user=int(con[0])
         try:
