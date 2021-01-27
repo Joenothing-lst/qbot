@@ -24,7 +24,7 @@ async def _(bot: Bot, event: MessageEvent):
         index = event.user_id
     msg = wb.match(index, event.raw_message, flags=1)
     if msg:
-        await bot.send(event, message=Message(unescape(random.choice(msg))))
+        await bot.send(event, message=Message(unescape(parse_at(random.choice(msg)))))
 
 
 wb_set_cmd = on_command('问', permission=GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER,
