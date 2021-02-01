@@ -15,11 +15,12 @@ vx_cmd = on_command('vx', permission=SUPERUSER)
 vx_parser = gen_parser()
 vx_parser.add_argument('-l', dest='login', action='store_true')
 vx_parser.add_argument('-s', dest='search', action='store_true')
+vx_parser.add_argument('-d', dest='download', action='store_true')
 # vx_parser.add_argument('-g', dest='to_group', action='store_true')
 
 @vx_cmd.handle()
 async def first_receive(bot: Bot, event: MessageEvent, state: T_State):
-    msg = str(event.message).strip()
+    msg = str(event.raw_message).strip('vx')
     if not state.get('vx'):
         state['vx'] = vx
     if msg:
@@ -30,7 +31,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     args = state['args'].split(None, 1)
     if args[0] == state['_prefix']['raw_command']:
         args = args[1].split(None, 1)
-
+    print(args[0])
     try:
         cmd = vx_parser.parse_args([args[0]])
     except Exception as e:
@@ -76,7 +77,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             await vx_cmd.finish()
 
     if cmd.download:
-        if vx.is_login:
+        if True:
             url = await vx.download_article_images(param.split())
             await bot.send(event, message=f'下载完成：\n{url}')
         else:
