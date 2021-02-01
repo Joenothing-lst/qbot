@@ -343,43 +343,39 @@ class WeChat(object):
         else:
             return '查询失败'
 
-    async def download_article_images(self, urls:list):
-        WEB_PATH = r'/usr/local/web/download/'
+    async def download_article_images(self, urls:list, base_path):
+        WEB_PATH = base_path or r'/usr/local/web/download'
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        query_path = WEB_PATH + now
+        query_path = os.path.join(WEB_PATH, now)
 
-        for url in urls:
-            res = await self.session.get(url, headers=self.headers)
-            html = Selector(text=res.text)
-            title = html.xpath('//h2[@class="rich_media_title"]/text()').get()
-            if title:
-                title = title.strip()
+        async def downloader(session, urls, query_path, headers=None):
+            for url in urls:
+                res = await session.get(url, headers=headers)
+                html = Selector(text=res.text)
+                title = html.xpath('//h2[@class="rich_media_title"]/text()').get()
+                if title:
+                    title = title.strip()
+                atc_type = 'unknow'
+                if '壁纸' in title:
+                    atc_type = 'wallpaper'
+                elif '背景' in title:
+                    atc_type = 'background'
+                links = html.xpath('//img/@data-src').getall()
+                for i in range(len(links)):
+                    tp = re.findall('wx_fmt=(.*?)&', links[i])
+                    if tp:
+                        type_ = tp[0]
+                    else:
+                        type_ = 'png'
+                    res = await session.get(links[i], headers=headers)
+                    save_path = os.path.join(query_path, title, atc_type)
+                    if not os.path.exists(save_path):
+                        os.makedirs(save_path)
+                    with open(os.path.join(save_path, f'图{i+1}.{type_}'), 'wb') as f:
+                        f.write(res.content)
 
-            atc_type = 'unknow'
-            if '壁纸' in title:
-                atc_type = 'wallpaper'
-            elif '背景' in title:
-                atc_type = 'background'
-
-            links = html.xpath('//img/@data-src').getall()
-            for i in range(len(links)):
-                tp = re.findall('wx_fmt=(.*?)&', links[i])
-                if tp:
-                    type_ = tp[0]
-                else:
-                    type_ = 'png'
-
-                res = await self.session.get(links[i], headers=self.headers)
-
-                save_path = query_path + f'/{title}/{atc_type}'
-                if not os.path.exists(save_path):
-                    os.makedirs(save_path)
-
-                with open(save_path + f'/图{i+1}.{type_}', 'wb') as f:
-                    f.write(res.content)
-
+        await downloader(self.session, urls, query_path, self.headers)
         cmd = f'zip {query_path}.zip {query_path}'
-        print(cmd)
         os.system(cmd)
         return f'http://101.37.117.40/download/{now}.zip'
 
@@ -396,10 +392,3 @@ def open_image(image_file):
         else:
             os.system("open " + image_file)  # for Mac
 
-if __name__ == '__main__':
-    wx = WeChat()
-    USER_NAME = '2802898563@qq.com'
-    USER_PASSWORD = 'zjqz1998'
-    async def main():
-        await wx.login(USER_NAME, USER_PASSWORD)
-    asyncio.get_event_loop().run_until_complete(main())
