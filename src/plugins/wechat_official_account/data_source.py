@@ -343,10 +343,9 @@ class WeChat(object):
         else:
             return '查询失败'
 
-    async def download_article_images(self, urls:list, base_path):
-        WEB_PATH = base_path or r'/usr/local/web/download'
+    async def download_article_images(self, urls:list, base_path=r"/usr/local/web/download"):
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        query_path = os.path.join(WEB_PATH, now)
+        query_path = os.path.join(base_path, now)
 
         async def downloader(session, urls, query_path, headers=None):
             for url in urls:
@@ -368,14 +367,14 @@ class WeChat(object):
                     else:
                         type_ = 'png'
                     res = await session.get(links[i], headers=headers)
-                    save_path = os.path.join(query_path, title, atc_type)
+                    save_path = os.path.join(query_path, atc_type, title)
                     if not os.path.exists(save_path):
                         os.makedirs(save_path)
                     with open(os.path.join(save_path, f'图{i+1}.{type_}'), 'wb') as f:
                         f.write(res.content)
 
         await downloader(self.session, urls, query_path, self.headers)
-        cmd = f'zip {query_path}.zip {query_path}'
+        cmd = f'cd {base_path} && zip -rm {now}.zip {now}/*'
         os.system(cmd)
         return f'http://101.37.117.40/download/{now}.zip'
 
