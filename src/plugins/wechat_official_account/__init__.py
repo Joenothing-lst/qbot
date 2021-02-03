@@ -6,32 +6,31 @@ from nonebot.adapters.cqhttp.message import Message, MessageSegment
 from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
-from src.utils.argparse import gen_parser
-
+from src.utils.util import gen_parser
 from .data_source import WeChat
 
 vx = WeChat()
-vx_cmd = on_command('vx', permission=SUPERUSER)
+vx_cmd = on_command('vx', permission=SUPERUSER, )
 vx_parser = gen_parser()
 vx_parser.add_argument('-l', dest='login', action='store_true')
 vx_parser.add_argument('-s', dest='search', action='store_true')
 vx_parser.add_argument('-d', dest='download', action='store_true')
 # vx_parser.add_argument('-g', dest='to_group', action='store_true')
 
+
 @vx_cmd.handle()
 async def first_receive(bot: Bot, event: MessageEvent, state: T_State):
     msg = str(event.raw_message).strip('vx')
-    if not state.get('vx'):
-        state['vx'] = vx
     if msg:
         state['args'] = msg
+
 
 @vx_cmd.got('args', )
 async def _(bot: Bot, event: MessageEvent, state: T_State):
     args = state['args'].split(None, 1)
     if args[0] == state['_prefix']['raw_command']:
         args = args[1].split(None, 1)
-    print(args[0])
+
     try:
         cmd = vx_parser.parse_args([args[0]])
     except Exception as e:
@@ -41,8 +40,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     if args[0] == args[-1]:
         await vx_cmd.reject('命令缺少[args,]\n' + __doc__)
     param = args[-1]
-
-    vx:WeChat = state['vx']
 
     if cmd.h:
         await vx_cmd.reject(__doc__)
@@ -77,9 +74,5 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             await vx_cmd.finish()
 
     if cmd.download:
-        if True:
-            url = await vx.download_article_images(param.split())
-            await bot.send(event, message=f'下载完成：\n{url}')
-        else:
-            await bot.send(event, message='您还未登录！请使用以下命令扫码登录:\nvx -l 公众号账号 密码')
-            await vx_cmd.finish()
+        url = await vx.download_article_images(param.split())
+        await bot.send(event, message=f'下载完成：\n{url}')

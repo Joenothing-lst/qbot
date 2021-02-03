@@ -1,6 +1,7 @@
 import httpx
 
 from nonebot import get_bots
+from nonebot.rule import ArgumentParser
 
 
 def get_bot():
@@ -12,3 +13,13 @@ async def async_request(method: str, url: str, **kwargs):
     async with httpx.AsyncClient() as client:
         result = await client.request(method.upper(), url, **kwargs)
         return result
+
+
+base_parser = ArgumentParser(add_help=False)
+
+base_parser.add_argument('-f', dest='finish', action='store_const', const=True, default=False)
+base_parser.add_argument('-h', dest='help', action='store_true', default=False)
+
+
+def gen_parser():
+    return ArgumentParser(add_help=False, parents=[base_parser])

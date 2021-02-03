@@ -6,8 +6,9 @@ from nonebot.adapters.cqhttp.message import Message
 from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
-from src.utils.argparse import gen_parser
-from .data_source import get_group_id_list
+
+from src.utils.util import gen_parser
+from .data_source import get_group_id_list, gen_qq
 
 
 __doc__ = '''to -[ugsabf] [args,]
@@ -28,14 +29,16 @@ to_parser.add_argument('-s', dest='several', action='store_true')
 to_parser.add_argument('-a', dest='all_group', action='store_true')
 to_parser.add_argument('-b', dest='ban', action='store_true')
 
+
 @to_cmd.handle()
 async def first_receive(bot: Bot, event: MessageEvent, state: T_State):
     msg = str(event.message).strip()
     if msg:
         state['args'] = msg
 
+
 @to_cmd.got('args', __doc__)
-async def first_receive(bot: Bot, state: T_State):
+async def _(bot: Bot, state: T_State):
     args = state['args'].split(None, 1)
     if args[0] == state['_prefix']['raw_command']:
         args = args[1].split(None, 1)
@@ -50,9 +53,9 @@ async def first_receive(bot: Bot, state: T_State):
         await to_cmd.reject('命令缺少[args,]\n' + __doc__)
     param = args[-1]
 
-    if cmd.h:
+    if cmd.help:
         await to_cmd.reject(__doc__)
-    elif cmd.f:
+    elif cmd.finish:
         await to_cmd.finish('本次命令结束')
 
     if cmd.several:
@@ -86,21 +89,3 @@ async def first_receive(bot: Bot, state: T_State):
             await bot.send_group_msg(group_id=params[0], message=unescape(params[1]))
 
     await to_cmd.finish(Message('[CQ:face,id=124]'))
-
-
-t_cmd = on_command('get_group_id_list', permission=SUPERUSER)
-
-
-@t_cmd.handle()
-async def _(bot: Bot, event: MessageEvent):
-    group_list = await get_group_id_list(bot)
-    await bot.send(event, message=str(group_list))
-
-
-
-def gen_qq(msg: str):
-    data = msg.lstrip().split(' ', 1)
-    while data[0].isdigit():
-        yield int(data[0])
-        data = data[1].lstrip().split(' ', 1)
-    yield ' '.join(data)
