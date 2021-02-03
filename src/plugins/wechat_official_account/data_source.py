@@ -374,7 +374,7 @@ class WeChat(object):
                         f.write(res.content)
 
         await downloader(self.session, urls, query_path, self.headers)
-        cmd = f'cd {base_path} && zip -rm {now}.zip {now}/*'
+        cmd = f'cd {base_path} && zip -rm {now}.zip {now}'
         os.system(cmd)
         return f'http://101.37.117.40/download/{now}.zip'
 
