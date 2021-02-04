@@ -8,7 +8,7 @@ async def get_group_id_list(bot: Bot):
 
 def gen_qq(msg: str):
     data = msg.lstrip().split(' ', 1)
-    while data[0].isdigit():
+    while data[0].isdigit() and 6 < len(data[0]) < 12:
         yield int(data[0])
         data = data[1].lstrip().split(' ', 1)
     yield ' '.join(data)

@@ -1,4 +1,4 @@
-from nonebot import require, on_command, on_message, on_keyword
+from nonebot import require, on_command, on_message, on_keyword, on_shell_command
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from nonebot.adapters.cqhttp.bot import Bot

@@ -7,10 +7,8 @@ import random
 import hashlib
 import pickle
 import httpx
-import requests
 import asyncio
 from lxml import etree
-from scrapy.selector import Selector
 
 
 class WeChat(object):
@@ -350,16 +348,16 @@ class WeChat(object):
         async def downloader(session, urls, query_path, headers=None):
             for url in urls:
                 res = await session.get(url, headers=headers)
-                html = Selector(text=res.text)
-                title = html.xpath('//h2[@class="rich_media_title"]/text()').get()
+                html = etree.HTML(text=res.text)
+                title = html.xpath('//h2[@class="rich_media_title"]/text()')
                 if title:
-                    title = title.strip()
+                    title = title[0].strip()
                 atc_type = 'unknow'
                 if '壁纸' in title:
                     atc_type = 'wallpaper'
                 elif '背景' in title:
                     atc_type = 'background'
-                links = html.xpath('//img/@data-src').getall()
+                links = html.xpath('//img/@data-src')
                 for i in range(len(links)):
                     tp = re.findall('wx_fmt=(.*?)&', links[i])
                     if tp:
@@ -376,7 +374,7 @@ class WeChat(object):
         await downloader(self.session, urls, query_path, self.headers)
         cmd = f'cd {base_path} && zip -rm {now}.zip {now}'
         os.system(cmd)
-        return f'http://101.37.117.40/download/{now}.zip'
+        return f'http://159.75.88.21/download/{now}.zip'
 
 
 def open_image(image_file):
