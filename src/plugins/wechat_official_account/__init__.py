@@ -41,9 +41,9 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         await vx_cmd.reject('命令缺少[args,]\n' + __doc__)
     param = args[-1]
 
-    if cmd.h:
+    if cmd.help:
         await vx_cmd.reject(__doc__)
-    elif cmd.f:
+    elif cmd.finish:
         await vx_cmd.finish('本次命令结束')
 
     if cmd.login:
