@@ -11,10 +11,12 @@ async def get_wm_item(item):
     results = await async_request('get', url)
     return results.text
 
+
 async def get_rm_item(item):
     url = rm_api.format(item)
     results = await async_request('get', url)
     return results.text
+
 
 async def get_wiki_item(item):
     url = wiki_api.format(item)

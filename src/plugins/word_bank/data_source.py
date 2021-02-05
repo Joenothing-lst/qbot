@@ -2,7 +2,6 @@ import json
 import os
 from typing import Union, List
 
-
 NULL_BANK = dict(congruence={
     0: dict()
 }, include={
@@ -37,7 +36,8 @@ class WordBank(object):
         """
         if isinstance(index, int):
             index = str(index)
-        reply = self.__data['congruence'].get(index, {}).get(msg, []) or self.__data['congruence'].get('0', {}).get(msg, [])
+        reply = self.__data['congruence'].get(index, {}).get(msg, []) or self.__data['congruence'].get('0', {}).get(msg,
+                                                                                                                    [])
 
         if not flags or reply:
             return reply

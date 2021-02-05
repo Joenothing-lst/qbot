@@ -1,7 +1,7 @@
 import re
 import random
 
-from nonebot import on_command, on_message, export
+from nonebot import on_command, on_message, on_regex, export
 from nonebot.permission import SUPERUSER
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message
@@ -16,6 +16,7 @@ export().word_bank = wb
 
 wb_matcher = on_message(priority=99)
 
+
 @wb_matcher.handle()
 async def _(bot: Bot, event: MessageEvent):
     if isinstance(event, GroupMessageEvent):
@@ -27,8 +28,8 @@ async def _(bot: Bot, event: MessageEvent):
         await bot.send(event, message=Message(unescape(parse_at(random.choice(msg)))))
 
 
-wb_set_cmd = on_command('问', permission=GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER,
-                        aliases={'全局问', '全局模糊问', '模糊问', })
+wb_set_cmd = on_regex(r"^(?:全局|模糊|正则)*问", permission=GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER,)
+
 
 @wb_set_cmd.handle()
 async def wb_set(bot: Bot, event: MessageEvent):
@@ -38,7 +39,7 @@ async def wb_set(bot: Bot, event: MessageEvent):
     else:
         index = event.user_id
 
-    kv = re.findall('([模糊全局]*)问(.*?)答(.*)', msg, re.S)
+    kv = re.findall(r"([模糊全局正则]*)问(.+?)答(.+)", msg, re.S)
     if kv:
         flag, key, value = kv[0]
         res = wb.set(0 if '全局' in flag else index,
@@ -53,9 +54,10 @@ async def wb_set(bot: Bot, event: MessageEvent):
 
 wb_del_cmd = on_command('删除词条', permission=GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER)
 
+
 @wb_del_cmd.handle()
 async def wb_del(bot: Bot, event: MessageEvent):
-    msg = event.message.__str__()
+    msg = str(event.message)
     res = wb.delete(event.user_id, msg)
     if res:
         await bot.send(event, message='删除成功~')
@@ -63,9 +65,10 @@ async def wb_del(bot: Bot, event: MessageEvent):
 
 wb_del_admin = on_command('删除全局词条', permission=SUPERUSER)
 
+
 @wb_del_admin.handle()
 async def wb_del_admin(bot: Bot, event: MessageEvent):
-    msg = event.message.__str__()
+    msg = str(event.message)
     res = wb.delete(0, msg)
     if res:
         await bot.send(event, message='删除成功~')

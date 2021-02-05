@@ -5,7 +5,6 @@ import time
 import datetime
 import random
 import hashlib
-import pickle
 import httpx
 import asyncio
 from lxml import etree
@@ -15,19 +14,13 @@ class WeChat(object):
     """
     获取需要爬取的微信公众号的推文链接
     """
+
     def __init__(self):
         """
         初始化参数
         Parameters
         ----------
-        username: str
-            用户账号
-        password: str
-            用户密码
-        token : str
-            登录微信公众号平台之后获取的token
-        cookie : str
-            登录微信公众号平台之后获取的cookie
+
         Returns
         -------
             None
@@ -36,7 +29,7 @@ class WeChat(object):
         self.session = httpx.AsyncClient()
         self.headers = {
             "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36"
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36"
         }
         self.params = {
             "lang": "zh_CN",
@@ -116,51 +109,50 @@ class WeChat(object):
         # except Exception:
         #     raise TypeError(u"账号密码输入错误，请重新输入")
 
-    def __save_cookie(self, username):
-        """
-        存储cookies, username用于文件命名
-        Parameters
-        ----------
-        username: str
-            用户账号
-        Returns
-        -------
-            None
-        """
-        cookies_file = '{}{}.cookies'.format(self.cookies_dir_path, username)
-        directory = os.path.dirname(cookies_file)
+    # def __save_cookie(self, username):
+    #     """
+    #     存储cookies, username用于文件命名
+    #     Parameters
+    #     ----------
+    #     username: str
+    #         用户账号
+    #     Returns
+    #     -------
+    #         None
+    #     """
+    #     cookies_file = '{}{}.cookies'.format(self.cookies_dir_path, username)
+    #     directory = os.path.dirname(cookies_file)
+    #
+    #     if not os.path.exists(directory):
+    #         os.makedirs(directory)
+    #
+    #     with open(cookies_file, 'wb') as f:
+    #         pickle.dump(self.session.cookies, f)
 
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        with open(cookies_file, 'wb') as f:
-            pickle.dump(self.session.cookies, f)
-
-
-    def __read_cookie(self):
-        """
-        从本地加载Cookie
-
-        Parameters
-        ----------
-        username: str
-            用户账号
-        Returns
-        -------
-            None
-        """
-        cookies_file = ''
-        if not os.path.exists(self.cookies_dir_path):
-            return False
-        for name in os.listdir(self.cookies_dir_path):
-            if name.endswith(".cookies"):
-                cookies_file = '{}{}'.format(self.cookies_dir_path, name)
-                break
-        if cookies_file == '':
-            return False
-        with open(cookies_file, 'rb') as f:
-            local_cookies = pickle.load(f)
-        self.set_cookies(local_cookies)
+    # def __read_cookie(self):
+    #     """
+    #     从本地加载Cookie
+    #
+    #     Parameters
+    #     ----------
+    #     username: str
+    #         用户账号
+    #     Returns
+    #     -------
+    #         None
+    #     """
+    #     cookies_file = ''
+    #     if not os.path.exists(self.cookies_dir_path):
+    #         return False
+    #     for name in os.listdir(self.cookies_dir_path):
+    #         if name.endswith(".cookies"):
+    #             cookies_file = '{}{}'.format(self.cookies_dir_path, name)
+    #             break
+    #     if cookies_file == '':
+    #         return False
+    #     with open(cookies_file, 'rb') as f:
+    #         local_cookies = pickle.load(f)
+    #     self.set_cookies(local_cookies)
 
     def set_cookies(self, cookies):
         self.session.cookies.update(cookies)
@@ -222,12 +214,11 @@ class WeChat(object):
         # 账号密码登录，获取二维码，等待用户扫描二维码，需手动关闭二维码窗口
         await self.session.post(bizlogin_url, headers=self.headers, data=data)
         img = await self.session.get(qrcode_url)
-                # 去除之后不用的headers的key
+        # 去除之后不用的headers的key
         self.headers.pop("Host")
         self.headers.pop("Origin")
 
         return img
-
 
     async def __login_official(self, username, retry=10):
         """
@@ -271,20 +262,19 @@ class WeChat(object):
                 # 获取token失败，重新扫码登录
                 print("登录失败，将在 3s 后重试")
                 await asyncio.sleep(3)
-                await self.__login_official(username, retry-1)
-
+                await self.__login_official(username, retry - 1)
 
     async def search_official(self, name: str, **kwargs):
         url = "https://mp.weixin.qq.com/cgi-bin/searchbiz"
         param = {"action": "search_biz",
-                "begin": "0",
-                "count": "5",
-                "query": name,
-                "token": self.params['token'],
-                "lang": "zh_CN",
-                "f":    "json",
-                "ajax": "1"}
-        for i,j in kwargs.items():
+                 "begin": "0",
+                 "count": "5",
+                 "query": name,
+                 "token": self.params['token'],
+                 "lang": "zh_CN",
+                 "f": "json",
+                 "ajax": "1"}
+        for i, j in kwargs.items():
             param[i] = j
         res = await self.session.get(url, params=param, headers=self.headers)
         result = json.loads(res.text).get('list', [])
@@ -341,11 +331,11 @@ class WeChat(object):
         else:
             return '查询失败'
 
-    async def download_article_images(self, urls:list, base_path=r"/usr/local/web/download"):
+    async def download_article_images(self, urls: list, base_path=r"/usr/local/web/download"):
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         query_path = os.path.join(base_path, now)
 
-        async def downloader(session, urls, query_path, headers=None):
+        async def downloader(session, urls, path, headers=None):
             for url in urls:
                 res = await session.get(url, headers=headers)
                 html = etree.HTML(text=res.text)
@@ -365,13 +355,13 @@ class WeChat(object):
                     else:
                         type_ = 'png'
                     res = await session.get(links[i], headers=headers)
-                    save_path = os.path.join(query_path, atc_type, title)
+                    save_path = os.path.join(path, atc_type, title)
                     if not os.path.exists(save_path):
                         os.makedirs(save_path)
-                    with open(os.path.join(save_path, f'图{i+1}.{type_}'), 'wb') as f:
+                    with open(os.path.join(save_path, f'图{i + 1}.{type_}'), 'wb') as f:
                         f.write(res.content)
 
-        await downloader(self.session, urls, query_path, self.headers)
+        await downloader(self.session, urls=urls, path=query_path, headers=self.headers)
         cmd = f'cd {base_path} && zip -rm {now}.zip {now}'
         os.system(cmd)
         return f'http://159.75.88.21/download/{now}.zip'
@@ -388,4 +378,3 @@ def open_image(image_file):
                 os.system("eog " + image_file)  # for Linux
         else:
             os.system("open " + image_file)  # for Mac
-
