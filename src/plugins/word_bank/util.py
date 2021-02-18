@@ -6,7 +6,7 @@ def parse_cmd(pattern, msg: str) -> list:
 
 
 def parse_at(msg: str) -> str:
-    return re.sub(r'at(\d+)', r'[CQ:at,qq=\1]', msg)
+    return re.sub(r'/at(\d+)', r'[CQ:at,qq=\1]', msg)
 
 
 def parse_self(msg: str, **kwargs) -> str:

@@ -11,10 +11,7 @@ NULL_BANK = dict((option, {"0": {}}) for option in OPTIONS)
 
 
 class WordBank(object):
-    """
-    WordBank类
 
-    """
     def __init__(self):
         self.dir_path = os.path.abspath(os.path.join(__file__, "..", "data"))
         self.data_path = os.path.join(self.dir_path, "bank.json")
@@ -115,7 +112,7 @@ class WordBank(object):
         删除词条
 
         :param index: 为0时是全局词库
-        :param key:
+        :param key: 触发短语
         :return:
         """
         index = str(index)

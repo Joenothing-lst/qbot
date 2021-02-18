@@ -9,9 +9,10 @@ from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.utils import unescape
 from nonebot.adapters.cqhttp.permission import GROUP_OWNER, GROUP_ADMIN, PRIVATE_FRIEND
 
-from .config import reply_type
 from .data_source import OPTIONS, word_bank as wb
 from .util import parse, parse_cmd
+
+reply_type = "random"
 
 export().word_bank = wb
 
