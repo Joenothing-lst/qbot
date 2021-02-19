@@ -1,9 +1,10 @@
-from nonebot import require, on_command, on_message, on_keyword, on_shell_command
+from nonebot import require, on_command, on_message, on_keyword, on_shell_command, on_request
+from nonebot.rule import command
 from nonebot.permission import SUPERUSER
-from nonebot.typing import T_State
+from nonebot.typing import T_State,T_Handler
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message
-from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupRequestEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
@@ -89,3 +90,67 @@ async def _(bot: Bot, state: T_State):
             await bot.send_group_msg(group_id=params[0], message=unescape(params[1]))
 
     await to_cmd.finish(Message('[CQ:face,id=124]'))
+
+
+request_cmd = on_request()
+
+
+@request_cmd.handle()
+async def request(bot: Bot, event: GroupRequestEvent):
+    f_group = event.group_id
+    f_user = event.user_id
+    if event.sub_type == 'invite':
+
+        result = request_cmd.new("message",
+                                 permission=SUPERUSER,
+                                 temp=True)
+
+        await bot.send_private_msg(user_id=912871833,
+                                   message=f'有新的群邀请:\n群：{f_group}\n邀请人：{f_user}\n')
+
+        request_event = event
+
+        @result.handle()
+        async def _(bot: Bot, event: MessageEvent):
+            if str(event.message) in '1y':
+                await request_event.approve(bot)
+            else:
+                await request_event.reject(bot)
+
+
+call_api = on_command('api', permission=SUPERUSER)
+
+@call_api.handle()
+async def _(bot: Bot, event: MessageEvent):
+    msg = str(event.message).split()
+
+    if msg:
+        api, *params = msg
+
+        param = dict(i.split('=') for i in params)
+        res = await bot.call_api(api, **param)
+        await call_api.finish(message=Message(res))
+
+
+
+# request_cmd = on_message(permission=PRIVATE)
+#
+#
+# @request_cmd.handle()
+# async def request(bot: Bot, event: MessageEvent):
+#     # 接收私聊消息
+#     f_user = event.user_id
+#     if True:
+#         # 创建临时 matcher
+#         request_cmd.new("message",
+#                         handlers=[decide],
+#                         permission=SUPERUSER,
+#                         temp=True)
+#
+#         await bot.send_private_msg(user_id=912871833,
+#                                    message=f'{f_user}:\n{event.raw_message}')
+#
+#
+# async def decide(bot: Bot, event: MessageEvent):
+#     # 临时 matcher 响应事件
+#     await request_cmd.send(message=event.message)
