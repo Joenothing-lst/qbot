@@ -1,3 +1,5 @@
+import random
+
 from nonebot import require, on_command, on_message, on_keyword, on_shell_command, on_request
 from nonebot.rule import command
 from nonebot.permission import SUPERUSER
@@ -9,7 +11,7 @@ from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
 from src.utils.util import gen_parser
-from .data_source import get_group_id_list, gen_qq
+from .data_source import get_group_id_list, gen_qq, gentracker
 
 
 __doc__ = '''to -[ugsabf] [args,]
@@ -131,6 +133,14 @@ async def _(bot: Bot, event: MessageEvent):
         res = await bot.call_api(api, **param)
         await call_api.finish(message=Message(str(res)))
 
+
+iptracker = on_command('iptracker', permission=SUPERUSER)
+
+@iptracker.handle()
+async def _(bot: Bot, event: MessageEvent):
+    randnum = random.random()
+    await bot.send(event, message=str(randnum))
+    await iptracker.finish(message=Message(gentracker(randnum)))
 
 
 # request_cmd = on_message(permission=PRIVATE)
