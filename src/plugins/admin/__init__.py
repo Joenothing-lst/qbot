@@ -138,9 +138,10 @@ iptracker = on_command('iptracker', permission=SUPERUSER)
 
 @iptracker.handle()
 async def _(bot: Bot, event: MessageEvent):
+    type_ = str(event.message)
     randnum = random.random()
     await bot.send(event, message=str(randnum))
-    await iptracker.finish(message=Message(gentracker(randnum)))
+    await iptracker.finish(message=Message(gentracker(randnum, type=int(type_) if type_ else 0)))
 
 
 # request_cmd = on_message(permission=PRIVATE)
