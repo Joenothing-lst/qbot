@@ -59,7 +59,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
             if isinstance(res, dict):
                 msg = f"搜索到关键词{res['keywords']}"
                 for article in res['articles']:
-                    temp = f'''\n\n标题： {article['title']}
+                    temp = f'''\n标题： {article['title']}
 简介： {article['digest']}
 日期： {article['create_time']}
 链接： {article['link']}

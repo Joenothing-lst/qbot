@@ -253,7 +253,6 @@ class WeChat(object):
             try:
                 # 截取字符串中的token参数
                 token = res["redirect_url"].split("=")[-1]
-                print(token)
                 self.params["token"] = token
                 # self.__save_cookie(username)  # 只有 cookies 似乎还不行，必须要带 token
                 self.headers.pop("Referer")
