@@ -14,8 +14,9 @@ def parse_self(msg: str, **kwargs) -> str:
 
 
 def parse_at_self(msg: str, **kwargs) -> str:
-    if str(kwargs.get('sender_id', '')):
-        return re.sub(r'/atself', f"[CQ:at,qq={str(kwargs.get('sender_id', ''))}]", msg)
+    qq = kwargs.get('sender_id', '')
+    if qq:
+        return re.sub(r'/atself', f"[CQ:at,qq={qq}]", msg)
     else:
         return msg
 

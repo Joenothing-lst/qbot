@@ -9,7 +9,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.utils import unescape
 from nonebot.adapters.cqhttp.permission import GROUP_OWNER, GROUP_ADMIN, PRIVATE_FRIEND
 
-from .data_source import OPTIONS, word_bank as wb
+from .data_source import word_bank as wb
 from .util import parse, parse_cmd
 
 reply_type = "random"
@@ -29,10 +29,15 @@ async def _(bot: Bot, event: MessageEvent):
     msgs = wb.match(index, unescape(event.raw_message))
     if msgs:
         if reply_type == 'random':
-            msg = Message(unescape(parse(msg=random.choice(msgs),
+            await bot.send(event,
+                           message=Message(
+                               unescape(
+                                   parse(msg=random.choice(msgs),
                                          nickname=event.sender.card or event.sender.nickname,
-                                         sender_id=event.sender.user_id)))
-            await bot.send(event, message=msg)
+                                         sender_id=event.sender.user_id)
+                               )
+                           )
+                           )
 
         else:
             for msg in msgs:
