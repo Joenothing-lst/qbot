@@ -16,9 +16,20 @@
         "912871833": {
             "rc": [
                 "[CQ:image,file=a859aaa09f440300c28e64b0bca30656.image]"
+            ],
+            "test": [
+                "&#91;CQ:json,data={\"config\":{\"height\":0&amp;#44;\"ctime\":1145141919810&amp;#44;\"forward\":1&amp;#44;\"width\":0&amp;#44;\"token\":\"1968c4a19912e09af1e9331f9c3b8209\"&amp;#44;\"type\":\"normal\"&amp;#44;\"autoSize\":0}&amp;#44;\"prompt\":\"&amp;#91;QQ小程序&amp;#93;群援交\"&amp;#44;\"app\":\"com.tencent.miniapp_01\"&amp;#44;\"ver\":\"0.0.0.1\"&amp;#44;\"view\":\"view_8C8E89B49BE609866298ADDFF2DBABA4\"&amp;#44;\"meta\":{\"detail_1\":{\"shareTemplateData\":{}&amp;#44;\"scene\":1036&amp;#44;\"appid\":\"\"&amp;#44;\"desc\":\"群主开启了群援交，快来一起加入吧！\"&amp;#44;\"preview\":\"http:\\/\\/159.75.88.21\\/download\\/20180619050109.jpg?q=1\"&amp;#44;\"title\":\"群援交\"&amp;#44;\"shareTemplateId\":\"8C8E89B49BE609866298ADDFF2DBABA4\"&amp;#44;\"icon\":\"https:\\/\\/img.yanlutong.com\\/uploadimg\\/ico\\/2020\\/0923\\/1600845864171401.png\"&amp;#44;\"url\":\"y.music.163.com\\/m\\/song\\/561493928\\/?userid=1584345022&amp;amp;app_version=8.0.00\"}}&amp;#44;\"desc\":\"群援交\"}&#93;"
+            ],
+            "wyy": [
+                "&#91;CQ:json,data={\"app\":\"com.tencent.structmsg\"&amp;#44;\"config\":{\"autosize\":true&amp;#44;\"ctime\":1614236383&amp;#44;\"forward\":true&amp;#44;\"token\":\"e04f23c6a1fd2a8320e495e1f83f0841\"&amp;#44;\"type\":\"normal\"}&amp;#44;\"desc\":\"音乐\"&amp;#44;\"extra\":{\"app_type\":1&amp;#44;\"appid\":100495085&amp;#44;\"uin\":912871833}&amp;#44;\"meta\":{\"music\":{\"action\":\"\"&amp;#44;\"android_pkg_name\":\"\"&amp;#44;\"app_type\":1&amp;#44;\"appid\":100495085&amp;#44;\"desc\":\"YOASOBI\"&amp;#44;\"jumpUrl\":\"https:\\/\\/y.music.163.com\\/m\\/song?id=1809741562&amp;amp;userid=426248920&amp;amp;app_version=8.1.20\"&amp;#44;\"musicUrl\":\"[CQ:image,file=3daf85f7dce831623b13f26d179355b4.image]http:\\/\\/music.163.com\\/song\\/media\\/outer\\/url?id=1809741562\"&amp;#44;\"preview\":\"https:\\/\\/external-30160.picsz.qpic.cn\\/748ccb92f76eb162cad463c96c29ea44\\/jpg1\"&amp;#44;\"sourceMsgId\":\"0\"&amp;#44;\"source_icon\":\"\"&amp;#44;\"source_url\":\"\"&amp;#44;\"tag\":\"网易云\r\n音乐\"&amp;#44;\"title\":\"優しい彗星 (TV动画《BEASTARS》第二季片尾曲)\"}}&amp;#44;\"prompt\":\"&amp;#91;分享&amp;#93;優しい彗星 (TV动画《BEASTARS》第二季片尾曲)\"&amp;#44;\"ver\":\"0.0.0.1\"&amp;#44;\"view\":\"music\"}&#93;"
             ]
         },
-        "697475156": {}
+        "697475156": {},
+        "247986197": {
+            "kkp": [
+                "/atself看你妈呢"
+            ]
+        }
     },
     "include": {
         "0": {
@@ -30,15 +41,14 @@
             ],
             "援交": [
                 "&#91;CQ:json,data={\"config\":{\"height\":0&amp;#44;\"ctime\":1145141919810&amp;#44;\"forward\":1&amp;#44;\"width\":0&amp;#44;\"token\":\"1968c4a19912e09af1e9331f9c3b8209\"&amp;#44;\"type\":\"normal\"&amp;#44;\"autoSize\":0}&amp;#44;\"prompt\":\"&amp;#91;QQ小程序&amp;#93;群援交\"&amp;#44;\"app\":\"com.tencent.miniapp_01\"&amp;#44;\"ver\":\"0.0.0.1\"&amp;#44;\"view\":\"view_8C8E89B49BE609866298ADDFF2DBABA4\"&amp;#44;\"meta\":{\"detail_1\":{\"shareTemplateData\":{}&amp;#44;\"scene\":1036&amp;#44;\"appid\":\"\"&amp;#44;\"desc\":\"群主开启了群援交，快来一起加入吧！\"&amp;#44;\"preview\":\"www.mikuclub.org\\/wp-content\\/uploads\\/2018\\/06\\/20180619050109.jpg?pt=5&amp;amp;ek=1#kp=1⪰=70-0-0\"&amp;#44;\"title\":\"群援交\"&amp;#44;\"shareTemplateId\":\"8C8E89B49BE609866298ADDFF2DBABA4\"&amp;#44;\"icon\":\"https:\\/\\/img.yanlutong.com\\/uploadimg\\/ico\\/2020\\/0923\\/1600845864171401.png\"&amp;#44;\"url\":\"y.music.163.com\\/m\\/song\\/561493928\\/?userid=1584345022&amp;amp;app_version=8.0.00\"}}&amp;#44;\"desc\":\"群援交\"}&#93;"
+            ],
+            "不理我": [
+                "你被屏蔽了"
             ]
         },
         "105110131": {
             "空战mod": [
                 "建议查着wiki去刷，常规的空战mod分布在不同等级的空战图，刷那些有点用的就行了，什么切冲穿的先不用管"
-            ],
-            "neko": [
-                "钢板neko",
-                "钢板"
             ]
         },
         "247986197": {
@@ -50,9 +60,11 @@
             "nmsl": [
                 "[CQ:image,file=62c0e8469d80720b771f47379a0689d8.image]",
                 "[CQ:image,file=a77d72a83a80ab07c4e4b57395d74be8.image]"
-            ],
-            "kkp": [
-                "/self是 大！色！狼！"
+            ]
+        },
+        "912871833": {
+            "object is not callable": [
+                "[CQ:image,file=356c53365db3e8a1e47135d39335108f.image]出现这种情况，请降级pydantic到1.7.3，使用如下代码：pip install --force-reinstall pydantic==1.7.3"
             ]
         }
     },
@@ -61,6 +73,9 @@
         "105110131": {
             "不.理我": [
                 "你被屏蔽了"
+            ],
+            "&#91;Nn&#93;eko": [
+                "平板"
             ]
         },
         "912871833": {}
