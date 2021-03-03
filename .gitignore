@@ -143,3 +143,6 @@ dmypy.json
 word_bank/data/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+.vscode/
+src/plugins/word_bank/data/*
