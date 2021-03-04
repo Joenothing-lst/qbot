@@ -12,6 +12,7 @@ from nonebot.adapters.cqhttp.permission import GROUP_OWNER, GROUP_ADMIN, PRIVATE
 from .data_source import word_bank as wb
 from .util import parse, parse_cmd
 
+
 reply_type = "random"
 
 export().word_bank = wb
