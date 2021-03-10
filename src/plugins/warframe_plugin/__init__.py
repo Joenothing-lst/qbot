@@ -66,16 +66,19 @@ async def _(bot: Bot, event: MessageEvent):
         await bot.send(event, message='指令格式：wiki 物品名')
 
 
-delete_msg = on_command('撤回！', aliases={'撤回!',})
+delete_msg = on_command('撤回！', aliases={'撤回!',}, priority=10)
 
 @delete_msg.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    msg_id, int_time = message_cache[str(event.group_id)].pop()
+    global message_cache
+    try:
+        msg_id, int_time = message_cache[str(event.group_id)].pop()
 
-    if (time.time()-int_time) < 180:
+        if (time.time()-int_time) < 180:
 
-        await bot.call_api('delete_msg', message_id=int(msg_id['message_id']))
-        await bot.send(event, message='你吼辣么大声干嘛！')
-
+            await bot.call_api('delete_msg', message_id=int(msg_id['message_id']))
+            await bot.send(event, message='你吼辣么大声干嘛！')
+    except:
+        pass
     # else:
     #     await bot.send(event, message='三分钟了，撤回不了了！')
