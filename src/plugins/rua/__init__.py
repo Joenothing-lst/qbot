@@ -1,14 +1,9 @@
 import re
 
-from nonebot import require, on_command, on_message, on_keyword, on_shell_command, on_request
-from nonebot.rule import command
-from nonebot.permission import SUPERUSER
-from nonebot.typing import T_State, T_Handler
+from nonebot import on_command
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
-from nonebot.adapters.cqhttp.event import MessageEvent, GroupRequestEvent
-from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
-from nonebot.adapters.cqhttp.utils import unescape, escape
+from nonebot.adapters.cqhttp.event import MessageEvent
 
 from .data_source import get_avatar, generate_gif
 

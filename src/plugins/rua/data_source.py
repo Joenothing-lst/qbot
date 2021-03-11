@@ -15,7 +15,7 @@ async def get_avatar(qq: int) -> Image.Image:
     return avatar
 
 
-def get_circle_avatar(avatar, size):
+def get_circle_avatar(avatar, size) -> Image.Image:
     # avatar.thumbnail((size, size))
     avatar = avatar.resize((size, size))
     scale = 5
@@ -28,10 +28,11 @@ def get_circle_avatar(avatar, size):
     return ret_img
 
 
-def generate_gif(avatar: Image.Image):
+def generate_gif(avatar: Image.Image) -> str:
     avatar_size = [(350,350), (372,305), (395,283), (380,305), (350,372)]
     avatar_pos = [(50,150), (28,195), (5,217), (5,195), (50,128)]
     imgs = []
+
     for i in range(5):
         im = Image.new(mode='RGBA', size=(600, 600), color='white')
         hand = Image.open(path.join(data_dir, f'hand-{i+1}.png'))
@@ -45,6 +46,8 @@ def generate_gif(avatar: Image.Image):
         im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
         im.paste(255, mask)
         imgs.append(im)
+
     out_path = path.join(data_dir, 'output.gif')
     imgs[0].save(fp=out_path, save_all=True, append_images=imgs, duration=25, loop=0, quality=80)
+
     return out_path
