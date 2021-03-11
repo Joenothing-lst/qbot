@@ -3,6 +3,7 @@
 # from nonebot import on_command
 # from nonebot.adapters.cqhttp.bot import Bot
 # from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
+# from nonebot.adapters.cqhttp.utils import unescape, escape
 
 # from .data_source import search_r18book
 
@@ -13,7 +14,8 @@
 
 # @r18book.handle()
 # async def _(bot: Bot, event: MessageEvent):
-#     params = str(event.message)
+#     params = unescape(str(event.message))
+    
 #     books = search_r18book(params)
 #     msg = f'找到关键词 【{params}】的本子：'
 #     msg = msg + '\n'.join(f"\n名称：{book['name']}\n链接：{book['link']}\n封面：{book['faceimg']}" for book in books)
