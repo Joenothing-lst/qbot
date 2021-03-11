@@ -46,5 +46,5 @@ def generate_gif(avatar: Image.Image):
         im.paste(255, mask)
         imgs.append(im)
     out_path = path.join(data_dir, 'output.gif')
-    imgs[0].save(fp=out_path, save_all=True, append_images=imgs, duration=50, loop=0, quality=80)
+    imgs[0].save(fp=out_path, save_all=True, append_images=imgs, duration=25, loop=0, quality=80)
     return out_path

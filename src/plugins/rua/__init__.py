@@ -28,6 +28,4 @@ async def creep(bot: Bot, event: MessageEvent):
 
     output = generate_gif(avatar)
 
-    print(output)
-
     await bot.send(event, message=Message(MessageSegment.image(file='file:///' + output)))
