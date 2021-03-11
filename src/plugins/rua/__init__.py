@@ -2,8 +2,8 @@ import re
 
 from nonebot import on_command
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.message import Message, MessageSegment
 from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 from .data_source import get_avatar, generate_gif
 
@@ -23,4 +23,4 @@ async def creep(bot: Bot, event: MessageEvent):
 
     output = generate_gif(avatar)
 
-    await bot.send(event, message=Message(MessageSegment.image(file='file:///' + output)))
+    await bot.send(event, message=Message(MessageSegment.image(file='file://' + output)))
