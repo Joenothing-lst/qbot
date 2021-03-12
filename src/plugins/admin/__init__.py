@@ -120,7 +120,7 @@ async def request(bot: Bot, event: GroupRequestEvent):
                 await request_event.reject(bot)
 
 
-call_api = on_command('api', permission=SUPERUSER)
+call_api = on_command('api', aliases={'call'}, permission=SUPERUSER)
 
 @call_api.handle()
 async def _(bot: Bot, event: MessageEvent):
