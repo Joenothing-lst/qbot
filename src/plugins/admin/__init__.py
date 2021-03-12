@@ -131,7 +131,8 @@ async def _(bot: Bot, event: MessageEvent):
 
         param = dict(i.split('=') for i in params)
         res = await bot.call_api(api, **param)
-        await call_api.finish(message=Message(str(res)))
+        if res:
+            await call_api.finish(message=Message(str(res)))
 
 
 iptracker = on_command('iptracker', permission=SUPERUSER)
