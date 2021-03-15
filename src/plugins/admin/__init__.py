@@ -125,11 +125,13 @@ call_api = on_command('api', aliases={'call'}, permission=SUPERUSER)
 @call_api.handle()
 async def _(bot: Bot, event: MessageEvent):
     msg = str(event.message).split()
+    param = event.dict()
 
     if msg:
         api, *params = msg
 
-        param = dict(i.split('=') for i in params)
+        param.update(dict(i.split('=') for i in params))
+
         res = await bot.call_api(api, **param)
         if res:
             await call_api.finish(message=Message(str(res)))
