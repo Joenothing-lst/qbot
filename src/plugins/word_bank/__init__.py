@@ -10,8 +10,7 @@ from nonebot.adapters.cqhttp.utils import unescape
 from nonebot.adapters.cqhttp.permission import GROUP_OWNER, GROUP_ADMIN, PRIVATE_FRIEND
 
 from .data_source import word_bank as wb
-from .util import parse, parse_cmd
-
+from .util import parse, parse_cmd, parse_ban
 
 reply_type = "random"
 
@@ -30,10 +29,16 @@ async def _(bot: Bot, event: MessageEvent):
     msgs = wb.match(index, unescape(event.raw_message))
     if msgs:
         if reply_type == 'random':
+            msg = random.choice(msgs)
+
+            duration = parse_ban(msg)
+            if duration and isinstance(event, GroupMessageEvent):
+                await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=duration)
+
             await bot.send(event,
                            message=Message(
                                unescape(
-                                   parse(msg=random.choice(msgs),
+                                   parse(msg=msg,
                                          nickname=event.sender.card or event.sender.nickname,
                                          sender_id=event.sender.user_id)
                                )
@@ -42,6 +47,10 @@ async def _(bot: Bot, event: MessageEvent):
 
         else:
             for msg in msgs:
+                duration = parse_ban(msg)
+                if duration and isinstance(event, GroupMessageEvent):
+                    await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=duration)
+
                 await bot.send(event,
                                message=Message(
                                    unescape(

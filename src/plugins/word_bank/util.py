@@ -14,11 +14,19 @@ def parse_self(msg: str, **kwargs) -> str:
 
 
 def parse_at_self(msg: str, **kwargs) -> str:
-    qq = kwargs.get('sender_id', '')
-    if qq:
-        return re.sub(r'/atself', f"[CQ:at,qq={qq}]", msg)
+    sender_id = kwargs.get('sender_id', '')
+    if sender_id:
+        return re.sub(r'/atself', f"[CQ:at,qq={sender_id}]", msg)
     else:
         return msg
+
+
+def parse_ban(msg: str) -> int:
+    matcher = re.findall(r'/ban(\d*)', msg)
+    if matcher:
+        user_id, duration = matcher[0]
+        # 默认 5 分钟
+        return int(duration or 300)
 
 
 def parse(msg, **kwargs):
