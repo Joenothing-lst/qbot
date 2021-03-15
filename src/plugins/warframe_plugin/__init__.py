@@ -18,7 +18,7 @@ async def _(bot: Bot, event: MessageEvent):
     item = str(event.message).strip()
     if item:
         msg = await get_wm_item(item)
-        msg_id = await bot.send(event, message=msg)
+        msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -31,7 +31,7 @@ async def _(bot: Bot, event: MessageEvent):
     item = str(event.message).strip()
     if item:
         msg = await get_rm_item(item)
-        msg_id = await bot.send(event, message=msg)
+        msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -44,7 +44,7 @@ async def _(bot: Bot, event: MessageEvent):
     item = str(event.message).strip()
     if item:
         msg = await get_wiki_item(item)
-        msg_id = await bot.send(event, message=msg)
+        msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
