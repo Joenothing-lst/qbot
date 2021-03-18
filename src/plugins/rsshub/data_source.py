@@ -23,7 +23,7 @@ class RssHub():
         return rss_dict
 
 
-    def check_rss(self, items: Union[FeedParserDict, list], path_to_items: list=None) -> list:
+    def check_rss(self, items: Union[FeedParserDict, list], path_to_items: list=None, key: str=None) -> list:
         """
         对比 items_cache 是否有新的 item 出现，有则返回新增的 item
 
@@ -37,7 +37,9 @@ class RssHub():
 
         assert isinstance(items, list)
 
-        diff_items = list(set(items).difference(set(self.items_cache)))
+        # diff_items = list(set(items).difference(set(self.items_cache)))
+
+        diff_items = [item for item in items if item not in self.items_cache]
 
         if diff_items:
             self.items_cache = items
