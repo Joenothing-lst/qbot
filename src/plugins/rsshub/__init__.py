@@ -30,6 +30,7 @@ async def _():
     rss_dict = await rss.parse_rss(headers=headers)
     diff_items = rss.check_rss(rss_dict, ['entries'])
     if diff_items:
-        msg = '更新辣！！！' + rss.gen_msg_from_temp(diff_items, rss_temp)
+
+        msg = f'更新辣！！！ 一共{len(diff_items)}条消息' + rss.gen_msg_from_temp(diff_items, rss_temp)
         await safe_send('group', 175039192, msg)
 
