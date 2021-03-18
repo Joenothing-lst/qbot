@@ -13,9 +13,9 @@ dic = {
     '活动': 'events',
     '警报': 'alerts',
     '突击': 'sortie',
-    '地球赏金': 'Ostrons:',
+    '地球赏金': 'Ostrons',
     '金星赏金': 'Solaris',
-    '火卫二赏': 'EntratiSyndicate:',
+    '火卫二赏金': 'EntratiSyndicate',
     '裂缝': 'fissures',
     '促销商品': 'flashSales',
     '入侵': 'invasions',
@@ -38,7 +38,7 @@ async def get_wf_item(msg):
         results = await async_request('get', url)
         return results.text
     else:
-        return '未找到【{msg}】，请从下列选项中选择查询：\n' + '\n'.join(i for i in dic.values())
+        return f'未找到【{msg}】，请从下列选项中选择查询：\n' + '\n'.join(i for i in dic.keys())
 
 
 async def get_wm_item(item):
