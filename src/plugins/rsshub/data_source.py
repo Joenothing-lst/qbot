@@ -1,29 +1,39 @@
-from typing import Union
 from feedparser import parse, FeedParserDict
+from typing import Union
 
 from src.utils.util import async_request
 
 
-class RssHub():
+class RssHub:
 
-    def __init__(self, rss_url: str):
+    items_cache: list = []
+
+    def __init__(self, rss_url: str, temp: str = "\n{title}\n{link}", **kwargs):
+        """
+        提供简单的 rss 监控及格式化功能
+
+        :param rss_url: rss 订阅链接
+        :param temp: 消息模版
+        :param kwargs: 请求参数
+        """
         self.rss_url = rss_url
-        self.items_cache = []
+        self.temp = temp
+        self.kwargs = kwargs
 
-    async def parse_rss(self, rss_url: str=None, **kwargs) -> FeedParserDict:
+    @staticmethod
+    async def async_parse(rss_url: str = None, **kwargs) -> FeedParserDict:
         """
         使用异步 get 请求解析 rss 链接，返回解析后的 FeedParserDict 对象
 
-        :param rss_url: 默认使用初始化时的 rss 订阅链接，传入其他 rss 订阅链接时会替换掉初始化时的 rss 订阅链接
+        :param rss_url: 默认使用初始化时的 rss 订阅链接
         :param kwargs: 请求使用的参数
         :return: FeedParserDict 对象
         """
-        res = await async_request('get', rss_url or self.rss_url, **kwargs)
-        rss_dict = parse(res.text)
+        res = await async_request('get', rss_url, **kwargs)
+        rss_dict = parse(res)
         return rss_dict
 
-
-    def check_rss(self, items: Union[FeedParserDict, list], path_to_items: list=None, key: str=None) -> list:
+    def check_rss(self, items: Union[FeedParserDict, list], path_to_items: str = 'entries') -> list:
         """
         对比 items_cache 是否有新的 item 出现，有则返回新增的 item
 
@@ -31,13 +41,13 @@ class RssHub():
         :param path_to_items: 解析出 items 的路径
         :return: 新增的 items 列表
         """
-        if isinstance(items, FeedParserDict) and path_to_items:
-            for path_ in path_to_items:
-                items = items.get(path_, {})
+        if isinstance(items, FeedParserDict):
+            items = items.get(path_to_items, [])
 
         assert isinstance(items, list)
 
-        # diff_items = list(set(items).difference(set(self.items_cache)))
+        if not self.items_cache:
+            self.items_cache = items
 
         diff_items = [item for item in items if item not in self.items_cache]
 
@@ -47,15 +57,24 @@ class RssHub():
         return diff_items
 
     @staticmethod
-    def gen_msg_from_temp(items: list, temp: str) -> str:
+    def gen_msg_from_temp(items: list, temp: str = "\n{title}\n{link}") -> str:
         """
         使用 items 填充模版(temp)，返回填充后的消息
 
         :param items: items 列表
-        :param temp: 必须是可以 format 的模版字符串
+        :param temp: 必须是可以 format 的模版字符串，默认 "\n{title}\n{link}"
         :return:
         """
-        msg = '\n'.join(temp.format(**item) for item in items)
-        return msg
+        return '\n'.join(temp.format(**item) for item in items)
 
+    async def checking_rss(self) -> str:
+        """
+        检查是否有新的 rss 并使用模版转换成消息
 
+        :return:
+        """
+        rss_dict = await self.async_parse(self.rss_url, **self.kwargs)
+
+        diff_items = self.check_rss(rss_dict)
+
+        return self.gen_msg_from_temp(diff_items, self.temp)
