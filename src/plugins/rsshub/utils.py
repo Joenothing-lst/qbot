@@ -20,7 +20,7 @@ async def safe_send(send_type: str, receivers: Union[str, int, list], message):
             receivers = [receivers]
 
         for id_ in receivers:
-            return await bot.call_api(f'send_{send_type}_msg', **{
+            await bot.call_api(f'send_{send_type}_msg', **{
                 'message': message,
                 'user_id' if send_type == 'private' else 'group_id': id_
             })
