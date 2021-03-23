@@ -32,8 +32,9 @@ headers2 = {
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
 }
 
+temp = "\n{title}\n{tags}\n{link}"
 
-rss_chouti = RssHub('https://dig.chouti.com/feed.xml', headers=headers1)
+rss_chouti = RssHub('https://dig.chouti.com/feed.xml', temp, headers=headers1)
 rss_agree = RssHub(
     'http://www.galgamezs.net/bbs/rss.php?fid=8&auth=7922Wq3mDt%2FPddHPHDb%2BMHiWp%2FP3Xj9Uv56wSMHEoFweHME5gOzqdH08cXQCV1k',
     headers=headers2
