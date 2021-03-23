@@ -45,14 +45,13 @@ rss_agree = RssHub(
 @scheduler.scheduled_job('cron', minute='*', id='rsshub')
 async def _():
     rss_dic = {
-        rss_chouti: {'id': 175039192, 'send_type': 'group'},
-        rss_chouti_hot: {'id': 175039192, 'send_type': 'group'},
-        rss_chouti_top: {'id': 175039192, 'send_type': 'group'},
-        rss_agree: {'id': [816888439], 'send_type': 'group'},
+        rss_chouti: {'id': 175039192, 'send_type': 'group', 'name': '抽屉'},
+        rss_chouti_hot: {'id': 175039192, 'send_type': 'group', 'name': '抽屉热榜'},
+        rss_agree: {'id': [816888439], 'send_type': 'group', 'name': '黑丸同人区'},
     }
 
     for rss, config in rss_dic.items():
         diff_items = await rss.checking_rss()
         if diff_items:
-            msg = f'更新辣！！！' + diff_items
+            msg = f"{config['name']}更新辣！！！" + diff_items
             await safe_send(config['send_type'], config['id'], msg)
