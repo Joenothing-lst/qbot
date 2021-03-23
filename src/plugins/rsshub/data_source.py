@@ -1,5 +1,5 @@
 from feedparser import parse, FeedParserDict
-from typing import Union
+from typing import Union, Dict, Tuple
 
 from src.utils.util import async_request
 
@@ -64,18 +64,19 @@ class RssHub:
         :param temp: 必须是可以 format 的模版字符串，默认 "\n{title}\n{link}"
         :return:
         """
-        return '\n'.join(self._format(temp, item) for item in items)
+        return '\n'.join(self._format(item, temp) for item in items)
 
     @staticmethod
-    def _format(temp, item):
+    def _format(item: dict, temp: str = "\n{title}\n{link}", list_format: Dict[str, Tuple[str, str]] = None):
         """
         对 item 里的一些列表处理成合适的字符串
 
-        :param temp:
-        :param item:
+        :param temp: 必须是可以 format 的模版字符串，默认 "\n{title}\n{link}"
+        :param item: 单个 item 字典
+        :param list_format: 需要处理的 index、key 和 间隔符
         :return:
         """
-        list_format_dict = {
+        list_format_dict = list_format or {
             'links': ('href', '\n'),
             'tags': ('term', '、'),
             'authors': ('name', '、')
