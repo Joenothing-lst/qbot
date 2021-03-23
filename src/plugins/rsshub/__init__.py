@@ -36,7 +36,6 @@ temp = "\n【{tags}】{title}\n{link}"
 
 rss_chouti = RssHub('https://dig.chouti.com/feed.xml', temp, headers=headers1)
 rss_chouti_hot = RssHub('https://rsshub.app/chouti/hot', temp)
-rss_chouti_top = RssHub('https://rsshub.app/chouti/top/24', temp)
 rss_agree = RssHub(
     'http://www.galgamezs.net/bbs/rss.php?fid=8&auth=7922Wq3mDt%2FPddHPHDb%2BMHiWp%2FP3Xj9Uv56wSMHEoFweHME5gOzqdH08cXQCV1k',
     headers=headers2
