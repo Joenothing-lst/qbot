@@ -46,15 +46,13 @@ class RssHub:
 
         assert isinstance(items, list)
 
-        _item = items.copy()
-
         if not self.items_cache:
-            self.items_cache = _item
+            self.items_cache = items
 
         diff_items = [item for item in items if item not in self.items_cache]
 
         if diff_items:
-            self.items_cache = _item
+            self.items_cache = items
 
         return diff_items
 
@@ -83,11 +81,13 @@ class RssHub:
             'authors': ('name', '、')
         }
 
+        _item = item.copy()
+
         for key, config in list_format_dict.items():
             index, fill = config
-            item[key] = fill.join(tag.get(index, '') for tag in item.get(key, []))
+            _item[key] = fill.join(tag.get(index, '') for tag in item.get(key, []))
 
-        return temp.format(**item)
+        return temp.format(**_item)
 
     async def checking_rss(self) -> str:
         """
