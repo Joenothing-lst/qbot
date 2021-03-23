@@ -43,7 +43,7 @@ rss_agree = RssHub(
 async def _():
     rss_dic = {
         rss_chouti: {'id': 175039192, 'send_type': 'group'},
-        rss_agree: {'id': [697475156, 816888439], 'send_type': 'group'},
+        rss_agree: {'id': [816888439], 'send_type': 'group'},
     }
 
     for rss, config in rss_dic.items():
