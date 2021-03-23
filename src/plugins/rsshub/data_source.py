@@ -46,13 +46,15 @@ class RssHub:
 
         assert isinstance(items, list)
 
+        _item = items.copy()
+
         if not self.items_cache:
-            self.items_cache = items
+            self.items_cache = _item
 
         diff_items = [item for item in items if item not in self.items_cache]
 
         if diff_items:
-            self.items_cache = items
+            self.items_cache = _item
 
         return diff_items
 
