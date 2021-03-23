@@ -56,8 +56,7 @@ class RssHub:
 
         return diff_items
 
-    @staticmethod
-    def gen_msg_from_temp(items: list, temp: str = "\n{title}\n{link}") -> str:
+    def gen_msg_from_temp(self, items: list, temp: str = "\n{title}\n{link}") -> str:
         """
         使用 items 填充模版(temp)，返回填充后的消息
 
@@ -65,7 +64,28 @@ class RssHub:
         :param temp: 必须是可以 format 的模版字符串，默认 "\n{title}\n{link}"
         :return:
         """
-        return '\n'.join(temp.format(**item) for item in items)
+        return '\n'.join(self._format(temp, item) for item in items)
+
+    @staticmethod
+    def _format(temp, item):
+        """
+        对 item 里的一些列表处理成合适的字符串
+
+        :param temp:
+        :param item:
+        :return:
+        """
+        list_format_dict = {
+            'links': ('href', '\n'),
+            'tags': ('term', '、'),
+            'authors': ('name', '、')
+        }
+
+        for key, config in list_format_dict.items():
+            index, fill = config
+            item[key] = fill.join(tag.get(index, '') for tag in item.get(key, []))
+
+        return temp.format(**item)
 
     async def checking_rss(self) -> str:
         """

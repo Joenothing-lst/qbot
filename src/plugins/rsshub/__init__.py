@@ -32,7 +32,7 @@ headers2 = {
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
 }
 
-temp = "\n{title}\n{tags}\n{link}"
+temp = "\n{title}\n【{tags}】\n{link}"
 
 rss_chouti = RssHub('https://dig.chouti.com/feed.xml', temp, headers=headers1)
 rss_agree = RssHub(
