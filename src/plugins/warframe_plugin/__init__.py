@@ -1,8 +1,6 @@
-import time
-
 from nonebot import on_command
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
 
 from .data_source import get_wf_item, get_wm_item, get_rm_item, get_wiki_item
 from .util import set_async_delay
@@ -21,6 +19,9 @@ async def _(bot: Bot, event: MessageEvent):
         msg = await get_wf_item(item)
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
+        if isinstance(event, GroupMessageEvent):
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
@@ -33,6 +34,9 @@ async def _(bot: Bot, event: MessageEvent):
     if item:
         msg = await get_wm_item(item)
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
+
+        if isinstance(event, GroupMessageEvent):
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -47,6 +51,9 @@ async def _(bot: Bot, event: MessageEvent):
         msg = await get_rm_item(item)
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
+        if isinstance(event, GroupMessageEvent):
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
@@ -59,6 +66,9 @@ async def _(bot: Bot, event: MessageEvent):
     if item:
         msg = await get_wiki_item(item)
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
+
+        if isinstance(event, GroupMessageEvent):
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
