@@ -20,7 +20,7 @@ async def _(bot: Bot, event: MessageEvent):
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         if isinstance(event, GroupMessageEvent):
-            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=5)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -36,7 +36,7 @@ async def _(bot: Bot, event: MessageEvent):
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         if isinstance(event, GroupMessageEvent):
-            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=5)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -52,7 +52,7 @@ async def _(bot: Bot, event: MessageEvent):
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         if isinstance(event, GroupMessageEvent):
-            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=5)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
@@ -68,7 +68,7 @@ async def _(bot: Bot, event: MessageEvent):
         msg_id = await bot.send(event, message=msg+'\n消息将于15秒后撤回')
 
         if isinstance(event, GroupMessageEvent):
-            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=10)
+            await bot.set_group_ban(group_id=event.group_id, user_id=event.sender.user_id, duration=5)
 
         await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
