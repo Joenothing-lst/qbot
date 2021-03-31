@@ -45,7 +45,7 @@ rss_agree = RssHub(
 async def _():
     rss_dic = {
         rss_chouti: {'id': 175039192, 'send_type': 'group', 'name': '抽屉'},
-        rss_chouti_hot: {'id': 175039192, 'send_type': 'group', 'name': '抽屉热榜'},
+        # rss_chouti_hot: {'id': 175039192, 'send_type': 'group', 'name': '抽屉热榜'},
         rss_agree: {'id': [816888439], 'send_type': 'group', 'name': '黑丸同人区'},
     }
 
