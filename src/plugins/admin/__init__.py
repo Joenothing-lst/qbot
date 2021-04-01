@@ -105,7 +105,8 @@ async def request(bot: Bot, event: GroupRequestEvent):
 
         result = request_cmd.new("message",
                                  permission=SUPERUSER,
-                                 temp=True)
+                                 temp=True,
+                                 priority=5)
 
         await bot.send_private_msg(user_id=912871833,
                                    message=f'有新的群邀请:\n群：{f_group}\n邀请人：{f_user}\n')
@@ -114,10 +115,14 @@ async def request(bot: Bot, event: GroupRequestEvent):
 
         @result.handle()
         async def _(bot: Bot, event: MessageEvent):
-            if str(event.message) in '1y':
+            msg = 'reject'
+            if 'y' or '1' in str(event.message):
+                msg = 'approve'
                 await request_event.approve(bot)
             else:
                 await request_event.reject(bot)
+
+            await result.finish(msg)
 
 
 call_api = on_command('api', aliases={'call'}, permission=SUPERUSER)
