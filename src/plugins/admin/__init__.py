@@ -6,7 +6,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State,T_Handler
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message
-from nonebot.adapters.cqhttp.event import MessageEvent, GroupRequestEvent
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent, GroupRequestEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
@@ -146,6 +146,14 @@ async def _(bot: Bot, event: MessageEvent):
     await bot.send(event, message=str(randnum))
     await iptracker.finish(message=Message(gentracker(randnum, type=int(type_) if type_ else 0)))
 
+
+show_me = on_keyword({'闪光弹', '照明弹'}, permission=SUPERUSER)
+
+@show_me.handle()
+async def _(bot: Bot, event: GroupMessageEvent):
+    if 'reply' in event.raw_message:
+        msg = event.reply.raw_message.replace(',type=flash', '')
+        await bot.send(event, Message(msg))
 
 # request_cmd = on_message(permission=PRIVATE)
 #
