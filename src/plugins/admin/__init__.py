@@ -1,14 +1,17 @@
-from nonebot import require, on_command, on_message, on_keyword, on_shell_command
+import random
+
+from nonebot import require, on_command, on_message, on_keyword, on_shell_command, on_request
+from nonebot.rule import command
 from nonebot.permission import SUPERUSER
-from nonebot.typing import T_State
+from nonebot.typing import T_State,T_Handler
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.message import Message
-from nonebot.adapters.cqhttp.event import MessageEvent
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent, GroupRequestEvent
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
 from src.utils.util import gen_parser
-from .data_source import get_group_id_list, gen_qq
+from .data_source import get_group_id_list, gen_qq, gentracker
 
 
 __doc__ = '''to -[ugsabf] [args,]
@@ -91,25 +94,90 @@ async def _(bot: Bot, state: T_State):
     await to_cmd.finish(Message('[CQ:face,id=124]'))
 
 
-temp = """<section style="text-align: center; line-height: 1.75em; margin-left: 8px; margin-right: 8px;">
-    <section style="margin-right: auto;margin-left: auto;width: 100%;vertical-align: middle;display: inline-block;line-height: 0;box-sizing: border-box;">
-        <section style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url2}&quot;);-webkit-tap-highlight-color: transparent;">
-            <svg enable-background="new 0 0 1080 435" space="preserve"
-                style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url1}&quot;);-webkit-tap-highlight-color:transparent;"
-                version="1.1" viewBox="0 0 1080 435" x="0px" xlink="http://www.w3.org/1999/xlink" xml=""
-                xmlns="http://www.w3.org/2000/svg" y="0px">
-                <animate attributeName="opacity" begin="click" dur="0.5s" values="1;0" fill="freeze" restart="never"></animate>
-            </svg>
-        </section>
-    </section>
-</section>"""
+request_cmd = on_request()
 
-merge_cmd = on_command('代码')
 
-@merge_cmd.handle()
+@request_cmd.handle()
+async def request(bot: Bot, event: GroupRequestEvent):
+    f_group = event.group_id
+    f_user = event.user_id
+    if event.sub_type == 'invite':
+
+        result = request_cmd.new("message",
+                                 permission=SUPERUSER,
+                                 temp=True,
+                                 priority=5)
+
+        await bot.send_private_msg(user_id=912871833,
+                                   message=f'有新的群邀请:\n群：{f_group}\n邀请人：{f_user}\n')
+
+        request_event = event
+
+        @result.handle()
+        async def _(bot: Bot, event: MessageEvent):
+            msg = 'reject'
+            if 'y' or '1' in str(event.message):
+                msg = 'approve'
+                await request_event.approve(bot)
+            else:
+                await request_event.reject(bot)
+
+            await result.finish(msg)
+
+
+call_api = on_command('api', aliases={'call'}, permission=SUPERUSER)
+
+@call_api.handle()
 async def _(bot: Bot, event: MessageEvent):
-    try:
-        url1, url2 = event.message.__str__().split()
-        await bot.send(event, message=temp.format(url1, url2))
-    except:
-        pass
+    msg = str(event.message).split()
+    param = event.dict()
+
+    if msg:
+        api, *params = msg
+
+        param.update(dict(i.split('=') for i in params))
+
+        res = await bot.call_api(api, **param)
+        if res:
+            await call_api.finish(message=Message(str(res)))
+
+
+iptracker = on_command('iptracker', permission=SUPERUSER)
+
+@iptracker.handle()
+async def _(bot: Bot, event: MessageEvent):
+    type_ = str(event.message)
+    randnum = random.random()
+    await bot.send(event, message=str(randnum))
+    await iptracker.finish(message=Message(gentracker(randnum, type=int(type_) if type_ else 0)))
+
+
+show_me = on_keyword({'闪光弹', '照明弹'}, permission=SUPERUSER)
+
+@show_me.handle()
+async def _(bot: Bot, event: GroupMessageEvent):
+    if 'reply' in event.raw_message:
+        msg = event.reply.raw_message.replace(',type=flash', '')
+        await bot.send(event, Message(msg))
+
+# request_cmd = on_message(permission=PRIVATE)
+#
+#
+# @request_cmd.handle()
+# async def request(bot: Bot, event: MessageEvent):
+#     # 接收私聊消息
+#     f_user = event.user_id
+#     if True:
+#         # 创建临时 matcher
+#         request_cmd.new("message",
+#                         handlers=[decide],
+#                         permission=SUPERUSER,
+#                         temp=True)
+#
+#         await bot.send_private_msg(user_id=912871833,
+#                                    message=f'{f_user}:\n{event.raw_message}')
+#
+#
+# async def decide(bot: Bot, event: MessageEvent):
+#     # 临时 matcher 响应事件
+#     await request_cmd.send(message=event.message)
