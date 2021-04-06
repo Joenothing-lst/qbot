@@ -41,19 +41,19 @@ async def get_wf_item(msg):
         return f'未找到【{msg}】，请从下列选项中选择查询：\n' + '\n'.join(i for i in dic.keys())
 
 
-async def get_wm_item(item):
-    url = wm_api.format(HOST, item)
+async def get_wm_item(msg):
+    url = wm_api.format(HOST, msg)
     results = await async_request('get', url)
     return results.text
 
 
-async def get_rm_item(item):
-    url = rm_api.format(HOST, item)
+async def get_rm_item(msg):
+    url = rm_api.format(HOST, msg)
     results = await async_request('get', url)
     return results.text
 
 
-async def get_wiki_item(item):
-    url = wiki_api.format(HOST, item)
+async def get_wiki_item(msg):
+    url = wiki_api.format(HOST, msg)
     results = await async_request('get', url)
     return results.text
