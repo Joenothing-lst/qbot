@@ -14,5 +14,5 @@ async def call_api_delay(api: str, delay: float, **params):
     loop.call_later(delay, wrapper, api, params)
 
 async def set_async_delay(func: Any, delay: int=15, **kwargs):
-    await sleep(delay)
+    await asyncio.sleep(delay)
     return await func(**kwargs)
