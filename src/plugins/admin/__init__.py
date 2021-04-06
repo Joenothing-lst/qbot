@@ -180,7 +180,7 @@ merge_cmd = on_command('代码')
 async def _(bot: Bot, event: MessageEvent):
     try:
         url1, url2 = event.message.__str__().split()
-        await bot.send(event, message=temp.format(url1, url2))
+        await bot.send(event, message=temp.format(url1=url1, url2=url2))
     except:
         print('error')
 
