@@ -161,28 +161,28 @@ async def _(bot: Bot, event: GroupMessageEvent):
         await bot.send(event, Message(msg))
 
 
-temp = """<section style="text-align: center; line-height: 1.75em; margin-left: 8px; margin-right: 8px;">
-    <section style="margin-right: auto;margin-left: auto;width: 100%;vertical-align: middle;display: inline-block;line-height: 0;box-sizing: border-box;">
-        <section style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url2}&quot;);-webkit-tap-highlight-color: transparent;">
-            <svg enable-background="new 0 0 1080 435" space="preserve"
-                style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url1}&quot;);-webkit-tap-highlight-color:transparent;"
-                version="1.1" viewBox="0 0 1080 435" x="0px" xlink="http://www.w3.org/1999/xlink" xml=""
-                xmlns="http://www.w3.org/2000/svg" y="0px">
-                <animate attributeName="opacity" begin="click" dur="0.5s" values="1;0" fill="freeze" restart="never"></animate>
-            </svg>
-        </section>
-    </section>
-</section>"""
+# temp = """<section style="text-align: center; line-height: 1.75em; margin-left: 8px; margin-right: 8px;">
+#     <section style="margin-right: auto;margin-left: auto;width: 100%;vertical-align: middle;display: inline-block;line-height: 0;box-sizing: border-box;">
+#         <section style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url2}&quot;);-webkit-tap-highlight-color: transparent;">
+#             <svg enable-background="new 0 0 1080 435" space="preserve"
+#                 style="display: inline-block;width: 100%;vertical-align: top;background-position: 0% 0%;background-repeat: no-repeat;background-size: 100%;background-attachment: scroll;background-image: url(&quot;{url1}&quot;);-webkit-tap-highlight-color:transparent;"
+#                 version="1.1" viewBox="0 0 1080 435" x="0px" xlink="http://www.w3.org/1999/xlink" xml=""
+#                 xmlns="http://www.w3.org/2000/svg" y="0px">
+#                 <animate attributeName="opacity" begin="click" dur="0.5s" values="1;0" fill="freeze" restart="never"></animate>
+#             </svg>
+#         </section>
+#     </section>
+# </section>"""
 
-merge_cmd = on_command('代码')
+# merge_cmd = on_command('代码')
 
-@merge_cmd.handle()
-async def _(bot: Bot, event: MessageEvent):
-    try:
-        url1, url2 = event.message.__str__().split()
-        await bot.send(event, message=temp.format(url1=url1, url2=url2))
-    except:
-        print('error')
+# @merge_cmd.handle()
+# async def _(bot: Bot, event: MessageEvent):
+#     try:
+#         url1, url2 = event.message.__str__().split()
+#         await bot.send(event, message=temp.format(url1=url1, url2=url2))
+#     except:
+#         print('error')
 
 # request_cmd = on_message(permission=PRIVATE)
 #
