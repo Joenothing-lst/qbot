@@ -24,8 +24,8 @@ async def _(bot: Bot, event: MessageEvent):
             except:
                 pass
 
-        # await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
-        await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
+        await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
+        # await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
         await bot.send(event, message='指令格式：wf 要查询的世界状态')
@@ -44,8 +44,8 @@ async def _(bot: Bot, event: MessageEvent):
             except:
                 pass
 
-        # await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
-        await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
+        await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
+        # await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
         await bot.send(event, message='指令格式：wm 物品名')
@@ -64,8 +64,8 @@ async def _(bot: Bot, event: MessageEvent):
             except:
                 pass
 
-        # await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
-        await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
+        await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
+        # await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
         await bot.send(event, message='指令格式：rm 物品名')
@@ -84,8 +84,8 @@ async def _(bot: Bot, event: MessageEvent):
             except:
                 pass
 
-        # await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
-        await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
+        await call_api_delay(api='delete_msg', delay=15, message_id=msg_id.get('message_id'))
+        # await set_async_delay(bot.call_api, api='delete_msg', message_id=msg_id.get('message_id'))
 
     else:
         await bot.send(event, message='指令格式：wiki 物品名')
