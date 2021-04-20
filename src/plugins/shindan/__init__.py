@@ -14,7 +14,7 @@ qid_dict = {"今天是什么少女": 162207, "异世界转生": 587874, "性格"
 date = True  # 是否令日期影响结果（测试结果每天不一样）
 
 
-shidan_cmd = on_command(tuple(qid_dict.keys()))
+shidan_cmd = on_command('shindan', aliases=set(qid_dict.keys()))
 
 @shidan_cmd.handle()
 async def on_input_new(bot: Bot, event: GroupMessageEvent, state: T_State):

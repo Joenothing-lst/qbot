@@ -2,6 +2,7 @@ from collections import Generator
 from typing import Callable, Dict
 import bs4
 import httpx
+from lxml import etree
 from bs4 import BeautifulSoup, NavigableString, Tag
 
 
@@ -49,14 +50,11 @@ async def get_data(qid, name):
     # headers["TE"] = "Trailers"
     url = f"https://shindanmaker.com/{qid}"
     resp = await async_request('post', url, headers=headers, data=data, timeout=10)
-    soup = BeautifulSoup(resp.content, "html.parser")
-    soup = soup.find("div", {"name": "shindanResultBlock"})
-    tags = soup.findAll("img")
-    text = get_text(soup).replace("\n\n\n", "\n").replace('診断結果','診断結果\n')
-    imgs = set(tag["src"] for tag in tags)
-    img_list = []
-    for each in imgs:
-        img_list.append(each.replace("data:image/jpeg;base64,", "base64://"))
+    html = etree.HTML(text=resp.text)
+    imgs = html.xpath('//div[@id="shindanResult"]//img/@src')
+    text = '診断結果\n' + ' '.join(html.xpath('string(//span[@id="shindanResult"])').split())
+    img_list = [each.replace("data:image/jpeg;base64,", "base64://") for each in imgs]
+
     return text, img_list
 
 
@@ -67,9 +65,9 @@ async def get_hot(top_index=0, name=""):
             "cookie": "_ga=GA1.2.440539836.1618304269; trc_cookie_storage=taboola%20global%3Auser-id=93ee8d5f-c5f4-48c6-924e-77da1e414e4a-tuct648ba0b; dui=eyJpdiI6IlhzQjJ1WnVoVkNFZ1Y1OXBKNlg2WVE9PSIsInZhbHVlIjoiVVhtZ1NTZWYxV2sxaC9aVmRncXNuREo1NTlteGNtVnZGQ1cyNFY4OHcxNldudWV5ZlZBbHJLL2pZZkk3aVQ0dTJ0djl2a0ROSW5jc1NBMXVHUHphejdxVld3bnNvQmw4bTkwMmJxK0VhQ01FT3ArV1ZEUGdqdWNlMW83VGlKa29QT2JjRVZzaXhhT2hiN3ViZHpMTkd3PT0iLCJtYWMiOiI5YzliZTlhMTk3NmE5YjMxMDc4NjNhNWZkZmQ4ZGEzYTg3ZDNmMzUzOGJhOGFmYWJiMmVlZjFiZDZiNjliOWM0In0=; _session=Xx4quie6qLKs5fady8KHb1QEDQ4EB1E2njevwZm7; _gid=GA1.2.1163823230.1618686436; dsr=eyJpdiI6Ijk2ZUNsVzR0czNqVjAwZ0gwRW8wZEE9PSIsInZhbHVlIjoiRGtiQng4MXBLdzRBbWltZWkrWW9hYXdERkZ1cmJNVThzSzFXcTU5Y1pDNjBqREpnamx5MzdydFhNUkhOWXNyTWRqc2psVmVmL0YvYm1EOWR5TWswVnc9PSIsIm1hYyI6ImIzYjczMWEyNTRmMTBjYWVjN2JlM2NiOGI2MDAxMjA0NGZjNzFjNmJiNTU1NGFlYzY5ZjRmMDcyMmY0NzI2M2YifQ==; name=eyJpdiI6IkFBMnE1cTkva1NrV3dxSEJSeE9tblE9PSIsInZhbHVlIjoiYmRlV1Npamh4RnkyRWdDYUhCN3ZFWHVVYUFRQXZBMEVYK1dTRzhBWmwzMWgzT2JodkdnQ3pPK0pxSDZIZXB1MUhHSi9mTXFzTVJFRS9Faks2UEwrSmc9PSIsIm1hYyI6IjhlNDk0NjI4MWEyMjFiNjhmYTQ5YzkzZDU0MDc4OTE0YTI4MTllZTg3NTA3NzA3NDBhOTVkZWVlNjcxN2Q2MGMifQ==; __gads=ID=daef441bdb6bf998:T=1618690556:S=ALNI_MY5PC9DMGtCGddfsjZmX-qQwnJo7Q; XSRF-TOKEN=eyJpdiI6IjFTdDZ6YzN5UWlYeVlBZHBNbHVpM0E9PSIsInZhbHVlIjoiU01rd2tHSnJRUkVtL2NGa1ZOYVN4c0U5bEVNNmw4TjFzd2VmQ09CNTVySE91RXFhSWhiWnRldE5vMThReFIzbytVQ0djUXBPZjRGeCtqRVlEam5JZmpRN0t3bDFVL3IzR3pGK3crM3JVOGZsdW1KckZOdEFTTS9BNDE4QSs4c3giLCJtYWMiOiJhMGZjMTQyNWIxMGI5NzUxODcwZTFkMmQ5MDIyNzc2OTY3YWI3MmE4NGFkNjg4YWYwYWIwMGNjN2JlNzQ3YjZkIn0=",
         }
         resp = await async_request('get', url="https://shindanmaker.com/list", headers=headers)
-        soup = bs4.BeautifulSoup(resp.text, "html.parser")
-        hot_test = soup.select("#shindan-index > div > div > div > h2 > a")[0 + top_index]
-        title = hot_test.text
+        html = etree.HTML(text=resp.text)
+        hot_test = html.xpath('//div[@id="shindan-index"]//a[@class="shindanLink"]/@href')[top_index-1]
+        title = html.xpath('//div[@id="shindan-index"]//a[@class="shindanLink"]/text()')
         reply = f"当前热门测试：{title}\n"
         text, img_list = await get_data(hot_test["href"][25:], name)
     else:
