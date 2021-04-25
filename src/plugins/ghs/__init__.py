@@ -1,47 +1,35 @@
-# import time
+from nonebot import on_command
+from nonebot.adapters.cqhttp.bot import Bot
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
+from nonebot.adapters.cqhttp.utils import unescape, escape
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
-# from nonebot import on_command
-# from nonebot.adapters.cqhttp.bot import Bot
-# from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
-# from nonebot.adapters.cqhttp.utils import unescape, escape
-
-# from .data_source import search_r18book
+from src.utils.util import call_api_delay
+from .data_source import search_r18book, Book, gen_forward_message
 
 
-# message_cache = {}
+r18book_search = on_command('搜本子', aliases={'找本子',})
 
-# r18book = on_command('搜本子')
-
-# @r18book.handle()
-# async def _(bot: Bot, event: MessageEvent):
-#     params = unescape(str(event.message))
+@r18book_search.handle()
+async def _(bot: Bot, event: MessageEvent):
+    params = unescape(str(event.message))
     
-#     books = search_r18book(params)
-#     msg = f'找到关键词 【{params}】的本子：'
-#     msg = msg + '\n'.join(f"\n名称：{book['name']}\n链接：{book['link']}\n封面：{book['faceimg']}" for book in books)
-#     msg_id = await bot.send(event, msg)
+    books = search_r18book(params)
+    msg = f'找到关键词 【{params}】的本子：'
+    msg = msg + '\n'.join(f"\nid：{book['book_id']}\n名称：{book['title']}" for book in books)
 
-#     if isinstance(event, GroupMessageEvent):
-#         group_id = str(event.group_id)
-#         if message_cache.get(group_id, []):
-#             message_cache[group_id].append((msg_id, time.time()))
-#         else:
-#             message_cache[group_id] = [(msg_id, time.time())]
+    msg_id = await bot.send(event, msg)
+
+    await call_api_delay(api='delete_msg', delay=30, message_id=msg_id.get('message_id'))
 
 
+r18book_view = on_command('看本子')
 
-# delete_msg = on_command('撤回！', aliases={'撤回!',})
+@r18book_view.handle()
+async def _(bot: Bot, event: GroupMessageEvent):
+    params = unescape(str(event.message))
+    book = Book(params)
+    msg = gen_forward_message([MessageSegment.image(file=page.image_url) for page in book.pages],
+                              event.sender.user_id)
 
-# @delete_msg.handle()
-# async def _(bot: Bot, event: GroupMessageEvent):
-#     global message_cache
-
-#     try:
-#         msg_id, int_time = message_cache[str(event.group_id)].pop()
-
-#         if (time.time()-int_time) < 180:
-
-#             await bot.call_api('delete_msg', message_id=int(msg_id['message_id']))
-#             await bot.send(event, message='你吼辣么大声干嘛！')
-#     except Exception as e:
-#         pass
+    await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(msg))
