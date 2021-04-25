@@ -50,4 +50,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
 
     await bot.send(event, message='找到惹！请稍等')
 
-    await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(msg))
+    try:
+        await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(msg))
+    except:
+        await bot.send(event, message='歪日  被口了发不出来')
