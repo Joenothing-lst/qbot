@@ -45,12 +45,20 @@ async def _(bot: Bot, event: GroupMessageEvent):
         await bot.send(event, message='没找到  爬')
         return
 
-    msg = gen_forward_message([MessageSegment.image(file=page.image_url) for page in book.pages],
+    msg_list = gen_forward_message([MessageSegment.image(file=page.image_url) for page in book.pages],
                               event.sender.user_id)
+
+    msg = (msg_list[i:i+5] for i in range(0,len(msg_list),5))
 
     await bot.send(event, message='找到惹！请稍等')
 
+    split = True
+
     try:
-        await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(msg))
+        if split:
+            for i in msg:
+                await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(i))
+        else:
+            await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(msg_list))
     except:
         await bot.send(event, message='歪日  被口了发不出来')
