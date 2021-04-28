@@ -5,12 +5,12 @@ from nonebot.adapters.cqhttp import Bot, MessageEvent, GroupMessageEvent, unesca
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 
-
 tips = '''# 仅在群聊中有效
 # 使用方法: @成员1^消息1+消息2+消息3$@成员2^消息1+消息2$
 # ^到$中间为消息，用 + 分割'''
 
 fake = on_command('fake', aliases={'伪造'}, permission=SUPERUSER, priority=5)
+
 
 @fake.handle()
 async def handle_first_receive(bot: Bot, event: MessageEvent, state: dict):
@@ -20,6 +20,7 @@ async def handle_first_receive(bot: Bot, event: MessageEvent, state: dict):
     args = str(event.message).strip()
     if args:
         state["msg"] = args  # 如果用户发送了参数则直接赋值
+
 
 @fake.got("msg", prompt=tips)
 async def handle_RssAdd(bot: Bot, event: MessageEvent, state: dict):
@@ -34,12 +35,13 @@ async def handle_RssAdd(bot: Bot, event: MessageEvent, state: dict):
         await fake.send('参数有误！E: {}'.format(e))
         logger.error('参数有误！E: {}'.format(e))
 
+
 async def fuck_forward(message, group_id, bot):
     msg = {
         'group_id': group_id,
         'messages': []
     }
-    items = re.findall('\[CQ:at,qq=(\d+).*?\].*?\^(.*?)\$', message)
+    items = re.findall(r'\[CQ:at,qq=(\d+).*?\].*?\^(.*?)\$', message)
     for qq, content in items:
         user = int(qq)
         try:
@@ -50,12 +52,13 @@ async def fuck_forward(message, group_id, bot):
         user_name = info.get('card') or info.get('nickname')
         msg_list = content.split('+')
         for msg_tmp in msg_list:
-            node = {"type": "node",
-                    "data": {
-                        "name": user_name,
-                        "uin": str(user),
-                        "content": msg_tmp
-                    }
-                    }
+            node = {
+                "type": "node",
+                "data": {
+                    "name": user_name,
+                    "uin": str(user),
+                    "content": msg_tmp
+                }
+            }
             msg['messages'].append(node)
     return msg

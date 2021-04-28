@@ -83,6 +83,11 @@ class WordBank(object):
                 except re.error:
                     print(f'正则匹配错误 - pattern: {key}, string: {msg}')
 
+            # for key in self.__data['regex'].get(index, {}):
+            #     result = re.search(key, msg)
+            #     if result:
+            #         return self.__data['regex']['0'][key]
+
     def __save(self):
         """
         :return:
