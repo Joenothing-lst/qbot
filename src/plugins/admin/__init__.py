@@ -125,7 +125,7 @@ async def request(bot: Bot, event: GroupRequestEvent):
             await result.finish(msg)
 
 
-call_api = on_command('api', aliases={'call'}, permission=SUPERUSER)
+call_api = on_command('api', aliases={'call', '希司提姆靠鲁', '希斯提姆靠鲁', '希司提姆考鲁', '希斯提姆考鲁'}, permission=SUPERUSER)
 
 @call_api.handle()
 async def _(bot: Bot, event: MessageEvent):
