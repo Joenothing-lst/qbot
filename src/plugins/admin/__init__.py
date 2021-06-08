@@ -10,7 +10,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent, Group
 from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
-from src.utils.util import gen_parser
+from src.utils.util import gen_parser, call_api_delay
 from .data_source import get_group_id_list, gen_qq, gentracker
 
 
