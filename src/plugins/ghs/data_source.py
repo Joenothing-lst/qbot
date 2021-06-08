@@ -120,7 +120,12 @@ def gen_forward_message(msg_list, user_id):
             "data": {
                 "name": 'NM$L-bot',
                 "uin": str(user_id),
-                "content": msg
+                "content": {
+                    "type": "text",
+                    "data": {
+                        "text": msg
+                    }
+                }
             }
         }
         msg_temp.append(node)
