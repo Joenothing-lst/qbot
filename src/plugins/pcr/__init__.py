@@ -1,4 +1,8 @@
-from nonebot import require
+from nonebot import require, on_command
+from nonebot.adapters.cqhttp.bot import Bot
+from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
+from nonebot.adapters.cqhttp.utils import unescape, escape
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 from src.utils.util import safe_send
 from .data_source import PcrWatching
@@ -16,4 +20,12 @@ async def _():
         diff_items = await rss.checking_rss()
         if diff_items:
             msg = f"{config['name']}更新辣！！！\n" + diff_items
-            await safe_send(config['send_type'], config['id'], msg)
+            await safe_send(config['send_type'], config['id'], Message(msg))
+
+pcr_cmd = on_command('台服新闻')
+
+@pcr_cmd.handle()
+async def _(bot: Bot, event: MessageEvent):
+    urls = await pcr_news.get_news_list()
+    msg = await pcr_news.get_msg(urls)
+    await bot.send(event, Message(msg))

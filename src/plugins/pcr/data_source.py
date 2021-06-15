@@ -8,7 +8,7 @@ JP_URL = ''
 TEMP = "\n{title}\n{img}\n{detail}\n{link}"
 
 class PcrWatching:
-    links_cache: list = []
+    urls_cache: list = []
 
     def __init__(self, watch_type: str = "tw", **kwargs):
         """
@@ -25,17 +25,20 @@ class PcrWatching:
         res = await async_request('get', self.watch_url, **self.kwargs)
         html = etree.HTML(text=res.text)
 
-        links = html.xpath('//article[@class="news_con"]/dl/dd/a/@href')
+        urls = html.xpath('//article[@class="news_con"]/dl/dd/a/@href')
 
+        return urls
+
+    def check_url(self, urls):
         if not self.links_cache:
-            self.links_cache = links
+            self.urls_cache = urls
 
-        diff_links = [f"{self.host}{link}" for link in links if link not in self.links_cache]
+        diff_urls = [f"{self.host}{url}" for url in urls if url not in self.urls_cache]
 
-        if diff_links:
-            self.links_cache = links
+        if diff_urls:
+            self.links_cache = urls
 
-        return diff_links
+        return diff_urls
 
     async def get_news_detail(self, url):
         res = await async_request('get', url, **self.kwargs)
@@ -58,9 +61,14 @@ class PcrWatching:
 
         return TEMP.format(**item)
 
-    async def checking_rss(self):
-        diff_items = await self.get_news_list()
+    async def get_msg(self, url_list):
+        return '\n\n'.join(await self.get_news_detail(url) for url in url_list)
 
-        if diff_items:
-            msg = '\n\n'.join(await self.get_news_detail(url) for url in diff_items)
+    async def checking_rss(self):
+        urls = await self.get_news_list()
+
+        diff_urls = self.check_url(urls)
+
+        if diff_urls:
+            msg = await self.get_msg(diff_urls)
             return msg
