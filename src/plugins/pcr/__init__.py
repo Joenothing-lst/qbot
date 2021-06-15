@@ -27,5 +27,5 @@ pcr_cmd = on_command('台服新闻')
 @pcr_cmd.handle()
 async def _(bot: Bot, event: MessageEvent):
     urls = await pcr_news.get_news_list()
-    msg = await pcr_news.get_msg(urls)
+    msg = await pcr_news.get_msg([f"{pcr_news.host}{url}" for url in urls])
     await bot.send(event, Message(msg))
