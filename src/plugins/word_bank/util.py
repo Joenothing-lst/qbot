@@ -22,11 +22,11 @@ def parse_at_self(msg: str, **kwargs) -> str:
 
 
 def parse_ban(msg: str) -> int:
-    matcher = re.findall(r'/ban(\d*)', msg)
+    matcher = re.findall(r'/ban([ \d]*)', msg)
     if matcher:
-        user_id, duration = matcher[0]
+        duration = matcher[0]
         # 默认 5 分钟
-        return int(duration or 300)
+        return int(duration.strip() or 300)
 
 
 def parse(msg, **kwargs):

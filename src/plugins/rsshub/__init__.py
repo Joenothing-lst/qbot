@@ -1,7 +1,8 @@
 from nonebot import require
 
+from src.utils.util import safe_send
 from .data_source import RssHub
-from .utils import safe_send
+
 
 scheduler = require('nonebot_plugin_apscheduler').scheduler
 

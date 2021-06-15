@@ -1,7 +1,10 @@
 import httpx
 import asyncio
 
+from typing import Union
+
 from nonebot import get_bots
+from nonebot.log import logger
 from nonebot.rule import ArgumentParser
 
 
@@ -39,3 +42,31 @@ def wrapper(api: str, params: dict):
 async def call_api_delay(api: str, delay: float, **params):
     loop = get_loop()
     loop.call_later(delay, wrapper, api, params)
+
+
+async def _white_list(bot: "Bot", event: "Event") -> bool:
+    return event.get_type() == "message" and int(event.get_user_id()) not in bot.config.Config
+
+async def safe_send(send_type: str, receivers: Union[str, int, list], message):
+    """
+    发送出现错误时, 尝试重新发送, 并捕获异常且不会中断运行
+
+    :param send_type: private / group, 对应私聊/群聊
+    :param _id: 接收者 id
+    :param message: 发送的消息
+    :return:
+    """
+    try:
+        bot = get_bot()
+
+        if not isinstance(receivers, list):
+            receivers = [receivers]
+
+        for id_ in receivers:
+            await bot.call_api(f'send_{send_type}_msg', **{
+                'message': message,
+                'user_id' if send_type == 'private' else 'group_id': id_
+            })
+
+    except Exception as e:
+        logger.error(f"推送失败（网络错误），错误信息：{e}")
