@@ -30,13 +30,13 @@ class PcrWatching:
         return urls
 
     def check_url(self, urls):
-        if not self.links_cache:
+        if not self.urls_cache:
             self.urls_cache = urls
 
         diff_urls = [f"{self.host}{url}" for url in urls if url not in self.urls_cache]
 
         if diff_urls:
-            self.links_cache = urls
+            self.urls_cache = urls
 
         return diff_urls
 
