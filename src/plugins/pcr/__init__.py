@@ -19,7 +19,7 @@ async def _():
     for rss, config in rss_dic.items():
         diff_items = await rss.checking_rss()
         if diff_items:
-            msg = f"{config['name']}更新辣！！！\n" + diff_items
+            msg = f"{config['name']}更新辣！！！" + diff_items
             await safe_send(config['send_type'], config['id'], Message(msg))
 
 pcr_cmd = on_command('台服新闻')

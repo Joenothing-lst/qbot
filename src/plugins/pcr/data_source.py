@@ -68,7 +68,7 @@ class PcrWatching:
             temp = await self.get_news_detail(url)
             news_list.append(temp)
 
-        return '\n\n'.join(news_list)
+        return '\n'.join(news_list)
 
     async def checking_rss(self):
         urls = await self.get_news_list()
