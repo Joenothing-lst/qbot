@@ -6,7 +6,8 @@ from typing import Union
 from nonebot import get_bots
 from nonebot.log import logger
 from nonebot.rule import ArgumentParser
-
+from nonebot.permission import Permission
+from nonebot.adapters import Bot, Event
 
 def get_bot():
     if get_bots():
