@@ -2,7 +2,7 @@ from lxml import etree
 
 from src.utils.util import async_request
 
-TW_URL = 'http://www.princessconnect.so-net.tw/'
+TW_URL = 'http://www.princessconnect.so-net.tw'
 JP_URL = ''
 
 TEMP = "\n{title}\n{img}\n{detail}\n{link}"
@@ -18,7 +18,7 @@ class PcrWatching:
         :param kwargs: 请求参数
         """
         self.host = TW_URL if watch_type == 'tw' else JP_URL
-        self.watch_url = self.host + 'news'
+        self.watch_url = self.host + '/news'
         self.kwargs = kwargs
 
     async def get_news_list(self):
