@@ -137,6 +137,9 @@ async def _(bot: Bot, event: MessageEvent):
 
         param.update(dict(i.split('=') for i in params))
 
+        if param.get('message'):
+            param['message'] = Message(param.get('message'))
+
         res = await bot.call_api(api, **param)
         if res:
             await call_api.finish(message=Message(str(res)))
