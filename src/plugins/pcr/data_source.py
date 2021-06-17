@@ -51,7 +51,7 @@ class PcrWatching:
         img = html.xpath('//article[@class="news_con"]//img/@src')
 
         if img:
-            item['img'] = f'[CQ:image,url={img[0]}]'
+            item['img'] = f'[CQ:image,file={img[0]}]'
         else:
             item['img'] = ''
 
