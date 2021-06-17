@@ -118,20 +118,51 @@ def gen_forward_message(msg_list, user_id):
         node = {
             "type": "node",
             "data": {
-                "name": 'NM$L-bot',
+                "name": "NM$L-bot",
                 "uin": str(user_id),
-                "content": msg,
-                # "content": {
-                #     "type": "text",
-                #     "data": {
-                #         "text": msg
-                #     }
-                # }
+                # "content": msg,
+                "content": {
+                    "type": "text",
+                    "data": {
+                        "text": msg
+                    }
+                }
             }
         }
         msg_temp.append(node)
 
     return msg_temp
 
+HOST = 'https://www.cilitiantang2030.xyz'
+
+async def search_mag(kw):
+    url = f'{HOST}/search/{kw}_ctime_1.html'
+    res = request('get', url)
+    html = etree.HTML(text=res.text)
+
+    items = html.xpath('//div[@class="col-md-8"]/div[@class="panel panel-default"]/div[@class="panel-body"]')
+
+    results = []
+    for item in items:
+        result = {}
+        result['title'] = ''.join(item.xpath('.//a//text()'))
+        result['link'] = HOST + item.xpath('.//a/@href')[0]
+        result['date'], result['size'], result['hot'] = [i for i in item.xpath('string(.//table)').split('\n') if i]
+        results.append(result)
+
+    return results
+
+async def get_mag(url):
+    if not url.startswith('http'):
+        url = HOST + url
+    res = request('get', url)
+    html = etree.HTML(text=res.text)
+
+    mag = html.xpath('//textarea[@id="MagnetLink"]/text()')[0]
+    return mag
+
+
 if __name__ == '__main__':
-    book = Book(356462)
+    # book = Book(356462)
+    r = search_r18book('[観用少女(こもた)]:Connect-少女は触手と愛をつむぐ- [中国翻訳]')
+    print(r)
