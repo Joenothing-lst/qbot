@@ -4,7 +4,7 @@ import codecs
 from lxml import etree
 from typing import List, Union, Optional
 from src.utils.util import async_request
-from nonebot.adapters.cqhttp.message import MessageSegment
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 ###
 import requests
@@ -40,7 +40,7 @@ class Book:
     upload_date: int
     cover: str
 
-    def __init__(self, id_or_url: Union[int, str]):
+    async def __init__(self, id_or_url: Union[int, str]):
         if isinstance(id_or_url, int) or id_or_url.isdigit():
             self.book_id = int(id_or_url)
             self.url = f'https://nhentai.net/g/{self.book_id}/'
@@ -52,18 +52,18 @@ class Book:
             else:
                 raise Exception('Error book id_or_url')
 
-        # await self.__get_book()
-        self.__get_book()
+        await self.__get_book()
+        # self.__get_book()
 
     @property
     def pages(self):
         return [Page(self.book_id, self.media_id, num, self.image_type) for num in range(self.page)]
 
-    # async def __get_book(self):
-    def __get_book(self):
-        # res = await async_request('get', self.url)
+    async def __get_book(self):
+    # def __get_book(self):
         try:
-            res = requests.get(self.url)
+            res = await async_request('get', self.url)
+            # res = requests.get(self.url)
         except:
             raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
@@ -93,9 +93,9 @@ def request(method: str, url: str, **kwargs):
         return requests.post(url, **kwargs)
 
 
-def search_r18book(keywords: str, page=1, limit=5):
+async def search_r18book(keywords: str, page=1, limit=5):
     keyword = '+'.join(keywords.split())
-    res = request('get', f'https://nhentai.net/search/?q={keyword}&page={page}')
+    res = await async_request('get', f'https://nhentai.net/search/?q={keyword}&page={page}')
     html = etree.HTML(text=res.text)
     el = html.xpath('//div[@class="gallery"]/a')
     books = []
@@ -120,13 +120,13 @@ def gen_forward_message(msg_list, user_id):
             "data": {
                 "name": "NM$L-bot",
                 "uin": str(user_id),
-                # "content": msg,
-                "content": {
-                    "type": "text",
-                    "data": {
-                        "text": msg
-                    }
-                }
+                "content": Message(msg),
+                # "content": {
+                #     "type": "text",
+                #     "data": {
+                #         "text": msg
+                #     }
+                # }
             }
         }
         msg_temp.append(node)
@@ -137,7 +137,7 @@ HOST = 'https://www.cilitiantang2030.xyz'
 
 async def search_mag(kw):
     url = f'{HOST}/search/{kw}_ctime_1.html'
-    res = request('get', url)
+    res = await async_request('get', url)
     html = etree.HTML(text=res.text)
 
     items = html.xpath('//div[@class="col-md-8"]/div[@class="panel panel-default"]/div[@class="panel-body"]')
@@ -155,7 +155,7 @@ async def search_mag(kw):
 async def get_mag(url):
     if not url.startswith('http'):
         url = HOST + url
-    res = request('get', url)
+    res = await async_request('get', url)
     html = etree.HTML(text=res.text)
 
     mag = html.xpath('//textarea[@id="MagnetLink"]/text()')[0]

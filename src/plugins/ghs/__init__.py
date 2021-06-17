@@ -19,15 +19,19 @@ r18book_search = on_command('搜本子',
 async def _(bot: Bot, event: GroupMessageEvent):
     params = unescape(str(event.message))
 
-    books = search_r18book(params)
+    books = await search_r18book(params)
     msg = f'找到关键词【{params}】的本子'
 
     forward_msg = gen_forward_message(
-        [msg] + [f"id：{book['book_id']}\n名称：{book['title']}\n{MessageSegment.image(file=book['cover'])}" for book in
+        [msg] + [f"id：{book['book_id']}\n名称：{book['title']}\n" for book in
                  books],
         event.sender.user_id)
 
-    print(forward_msg)
+    # forward_msg = [MessageSegment.node_custom(event.sender.user_id,
+    #                                    nickname="NM$L",
+    #                                    content=f"id：{book['book_id']}\n名称：{book['title']}\n{MessageSegment.image(file=book['cover'])}"
+    #                                    ) for book in books]
+    
 
     msg_id = await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(forward_msg))
 
@@ -43,13 +47,18 @@ r18book_view = on_command('看本子',
 async def _(bot: Bot, event: GroupMessageEvent):
     params = unescape(str(event.message))
     try:
-        book = Book(params)
+        book = await Book(params)
     except:
         await bot.send(event, message='没找到  爬')
         return
 
     msg_list = gen_forward_message([MessageSegment.image(file=page.image_url) for page in book.pages],
-                              event.sender.user_id)
+                                   event.sender.user_id)
+    
+    # msg_list = [MessageSegment.node_custom(event.sender.user_id,
+    #                                        nickname="NM$L",
+    #                                        content=MessageSegment.image(file=page.image_url)
+    #                                        ) for page in book.pages]
 
     msg = (msg_list[i:i+5] for i in range(0,len(msg_list),5))
 
