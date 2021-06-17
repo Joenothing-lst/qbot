@@ -83,8 +83,15 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         await search_mag_cmd.finish(msg)
     else:
         state['results'] = r
-        msg = '找到以下结果：' + '\n'.join(f"\n{i+1}、{r[i]['title']}\n热度【{r[i]['hot']}】\n日期：{r[i]['date']} 大小：{r[i]['size']}" for i in range(l))
-        await bot.send(event, msg)
+        msg_list = ['找到以下结果'] + [f"{i+1}、{r[i]['title']}\n热度【{r[i]['hot']}】\n日期：{r[i]['date']} 大小：{r[i]['size']}" for i in range(l)]
+
+        forward_msg = gen_forward_message(msg_list,
+                            event.sender.user_id)
+
+        msg_id = await bot.call_api('send_group_forward_msg', group_id=event.group_id, messages=Message(forward_msg))
+
+        await call_api_delay(api='delete_msg', delay=30, message_id=msg_id.get('message_id'))
+        # await bot.send(event, msg)
 
 
 @search_mag_cmd.got('index', '是编号几？')
