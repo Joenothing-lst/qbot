@@ -83,7 +83,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
         await search_mag_cmd.finish(msg)
     else:
         state['results'] = r
-        msg = '找到以下结果：' + '\n'.join(f"\n{i}、{r[i]['title']}\n热度【{r[i]['hot']}】\n日期：{r[i]['{date}']} 大小：{r[i]['size']}" for i in range(l))
+        msg = '找到以下结果：' + '\n'.join(f"\n{i}、{r[i]['title']}\n热度【{r[i]['hot']}】\n日期：{r[i]['date']} 大小：{r[i]['size']}" for i in range(l))
         await bot.send(event, msg)
 
 
