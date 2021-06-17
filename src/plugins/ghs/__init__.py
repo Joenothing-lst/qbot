@@ -89,8 +89,6 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @search_mag_cmd.got('index', '是编号几？')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
-    params = unescape(str(event.message))
-
-    msg = await get_mag(state['index'][int(params)-1].get('link'))
+    msg = await get_mag(state['results'][int(state['index'])-1].get('link'))
 
     await bot.send(event, msg)
