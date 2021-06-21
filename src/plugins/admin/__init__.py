@@ -163,14 +163,14 @@ async def _(bot: Bot, event: GroupMessageEvent):
         msg = event.reply.raw_message.replace(',type=flash', '')
         await bot.send(event, Message(msg))
 
-scheduler = require('nonebot_plugin_apscheduler').scheduler
-
-@scheduler.scheduled_job('cron', hour='*', id='ti_gang')
-async def ti_gang():
-    await call_api_delay('send_group_msg',
-                         random.randint(1, 100),
-                         group_id=476328543,
-                         message=Message('[CQ:image,file=d01d3883a38999345e536012aeb18c76.image,url=https://c2cpicdw.qpic.cn/offpic_new/912871833//912871833-2997538805-D01D3883A38999345E536012AEB18C76/0?term=3]'))
+# scheduler = require('nonebot_plugin_apscheduler').scheduler
+#
+# @scheduler.scheduled_job('cron', hour='*', id='ti_gang')
+# async def ti_gang():
+#     await call_api_delay('send_group_msg',
+#                          random.randint(1, 100),
+#                          group_id=476328543,
+#                          message=Message('[CQ:image,file=d01d3883a38999345e536012aeb18c76.image,url=https://c2cpicdw.qpic.cn/offpic_new/912871833//912871833-2997538805-D01D3883A38999345E536012AEB18C76/0?term=3]'))
 
 
 
