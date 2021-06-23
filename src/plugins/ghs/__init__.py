@@ -105,6 +105,10 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
 
 @search_mag_cmd.got('index', '是编号几？')
 async def _(bot: Bot, event: MessageEvent, state: T_State):
-    msg = await get_mag(state['results'][int(state['index'])-1].get('link'))
+    index = state['index']
+    if index.isdigit():
+        msg = await get_mag(state['results'][int(index) - 1].get('link'))
+        await bot.send(event, msg)
 
-    await bot.send(event, msg)
+    else: # 发送输入错误请重新输入直到收到正确回复
+        await search_mag_cmd.reject('输入错误，请重新输入')
