@@ -145,17 +145,20 @@ def sublist(a, b):
 def pinyin2api(s):
     api_pinyin = lazy_pinyin(s)
     cmd_map = {
-            'send': ['sen', 'de'],
-            'set': ['sai', 'te'],
-            'get': ['gei', 'te'],
-            'delate': ['di', 'lei', 'te'],
-            'group': ['ge', 'rou', 'pu'],
-            'private': ['pu', 'rui', 'wei', 'te'],
-            'msg': ['mai', 'shei', 'ji'],
-            'ban': ['ban'],
-            'whole': ['hou'],
-            'friend': ['fu', 'run', 'de']
-        }
+        'send': ['sen', 'de'],
+        'set': ['sai', 'te'],
+        'get': ['gei', 'te'],
+        'delate': ['di', 'lei', 'te'],
+        'group': ['ge', 'rou', 'pu'],
+        'private': ['pu', 'rui', 'wei', 'te'],
+        'msg': ['mai', 'shei', 'ji'],
+        'ban': ['ban'],
+        'whole': ['hou'],
+        'friend': ['fu', 'run', 'de'],
+        'id': ['ai', 'di'],
+        'user': ['you', 're'],
+
+    }
 
     for k, v in cmd_map.items():
         r = sublist(v, api_pinyin)
@@ -183,7 +186,13 @@ async def _(bot: Bot, event: MessageEvent):
         if isall_chinese(api):
             api = pinyin2api(api)
 
-        param.update(dict(i.split('=', 1) for i in params))
+        _input = {}
+        for i in params:
+            k, v = i.split('=', 1)
+            _input[pinyin2api(k) if isall_chinese(k) else k] = v
+
+        # param.update(dict(i.split('=', 1) for i in params))
+        param.update(_input)
 
         # if MessageSegment.reply in event.message:
         #     ...
