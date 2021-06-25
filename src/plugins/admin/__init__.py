@@ -1,13 +1,14 @@
 import random
 
+from pypinyin import lazy_pinyin
 from nonebot import require, on_command, on_message, on_keyword, on_shell_command, on_request
 from nonebot.rule import command
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State,T_Handler
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.message import Message
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent, GroupRequestEvent
-from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP
+from nonebot.adapters.cqhttp.permission import PRIVATE, GROUP, GROUP_ADMIN, GROUP_OWNER
 from nonebot.adapters.cqhttp.utils import unescape, escape
 
 from src.utils.util import gen_parser, call_api_delay
@@ -125,6 +126,50 @@ async def request(bot: Bot, event: GroupRequestEvent):
             await result.finish(msg)
 
 
+# def is_sublist(a, b):
+#     if a == []: return True
+#     if b == []: return False
+#     return b[:len(a)] == a or is_sublist(a, b[1:])
+
+def sublist(a, b):
+    if a == []: return (0, 0)
+    if b == []: return False
+
+    for i in range(len(b)):
+        if not b[:len(a)] == a:
+            b = b[1:]
+        else:
+            return (i, i + len(a))
+
+
+def pinyin2api(s):
+    api_pinyin = lazy_pinyin(s)
+    cmd_map = {
+            'send': ['sen', 'de'],
+            'set': ['sai', 'te'],
+            'get': ['gei', 'te'],
+            'delate': ['di', 'lei', 'te'],
+            'group': ['ge', 'rou', 'pu'],
+            'private': ['pu', 'rui', 'wei', 'te'],
+            'msg': ['mai', 'shei', 'ji'],
+            'ban': ['ban'],
+            'whole': ['hou'],
+            'friend': ['fu', 'run', 'de']
+        }
+
+    for k, v in cmd_map.items():
+        r = sublist(v, api_pinyin)
+        if r:
+            del api_pinyin[r[0]:r[1]]
+            api_pinyin.insert(r[0], k)
+
+    return '_'.join(api_pinyin)
+
+
+def isall_chinese(s):
+    return all(u'\u4e00' <= ch <= u'\u9fa5' for ch in s)
+
+
 call_api = on_command('api', aliases={'call', '希司提姆靠鲁', '希斯提姆靠鲁', '希司提姆考鲁', '希斯提姆考鲁'}, permission=SUPERUSER)
 
 @call_api.handle()
@@ -135,7 +180,13 @@ async def _(bot: Bot, event: MessageEvent):
     if msg:
         api, *params = msg
 
+        if isall_chinese(api):
+            api = pinyin2api(api)
+
         param.update(dict(i.split('=', 1) for i in params))
+
+        # if MessageSegment.reply in event.message:
+        #     ...
 
         if param.get('message'):
             param['message'] = Message(unescape(str(param.get('message'))))
