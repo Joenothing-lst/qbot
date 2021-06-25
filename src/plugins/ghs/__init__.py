@@ -47,7 +47,7 @@ r18book_view = on_command('看本子',
 async def _(bot: Bot, event: GroupMessageEvent):
     params = unescape(str(event.message))
     try:
-        book = await Book(params)
+        book = Book(params)
     except:
         await bot.send(event, message='没找到  爬')
         return

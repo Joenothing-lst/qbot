@@ -54,17 +54,17 @@ class Book:
                 raise Exception('Error book id_or_url')
 
         # get_loop_and_run(self.__get_book())
-        # self.__get_book()
+        self.__get_book()
 
     @property
     def pages(self):
         return [Page(self.book_id, self.media_id, num, self.image_type) for num in range(self.page)]
 
-    async def __get_book(self):
-    # def __get_book(self):
+    # async def __get_book(self):
+    def __get_book(self):
         try:
-            res = await async_request('get', self.url)
-            # res = requests.get(self.url)
+            # res = await async_request('get', self.url)
+            res = requests.get(self.url)
         except:
             raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
@@ -167,6 +167,25 @@ async def get_mag(url):
 
 
 if __name__ == '__main__':
-    # book = Book(356462)
-    r = search_r18book('[観用少女(こもた)]:Connect-少女は触手と愛をつむぐ- [中国翻訳]')
-    print(r)
+    import asyncio
+
+    # def main():
+    #     book = Book(356462)
+    #     print(book.pages)
+
+    loop = asyncio.get_event_loop()
+
+    book = Book(356462)
+
+
+
+
+    # print(book.pages)
+    get_loop_and_run(book.get_book)
+    print(book.pages)
+
+    loop.run_forever()
+
+
+    # r = search_r18book('[観用少女(こもた)]:Connect-少女は触手と愛をつむぐ- [中国翻訳]')
+    # print(r)
