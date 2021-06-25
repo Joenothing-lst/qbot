@@ -33,6 +33,10 @@ def gen_parser():
 def get_loop():
     return asyncio.get_running_loop()
 
+def get_loop_and_run(coro):
+    task = asyncio.create_task(coro)
+    get_loop().run_until_complete(task)
+    return task.result()
 
 def wrapper(api: str, params: dict):
     loop = get_loop()
