@@ -46,11 +46,12 @@ r18book_view = on_command('看本子',
 @r18book_view.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     params = unescape(str(event.message))
-    try:
-        book = Book(params)
-    except:
-        await bot.send(event, message='没找到  爬')
-        return
+    # try:
+    #     book = Book(params)
+    # except:
+    #     await bot.send(event, message='没找到  爬')
+    #     return
+    book = Book(params)
 
     msg_list = gen_forward_message([MessageSegment.image(file=page.image_url) for page in book.pages],
                                    event.sender.user_id)
