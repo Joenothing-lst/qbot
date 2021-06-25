@@ -3,7 +3,7 @@ import json
 import codecs
 from lxml import etree
 from typing import List, Union, Optional
-from src.utils.util import async_request
+from src.utils.util import async_request, get_loop_and_run
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 ###
@@ -21,7 +21,8 @@ class Page:
     image_url: str
     image_type: str
 
-    def __init__(self, book_id: Union[int, str], media_id: Union[int, str], page_num: Union[int, str] = 0, image_type: str = 'jpg'):
+    def __init__(self, book_id: Union[int, str], media_id: Union[int, str], page_num: Union[int, str] = 0,
+                 image_type: str = 'jpg'):
         self.book_id = int(book_id)
         self.media_id = int(media_id)
         self.page_num = int(page_num)
@@ -40,7 +41,7 @@ class Book:
     upload_date: int
     cover: str
 
-    async def __init__(self, id_or_url: Union[int, str]):
+    def __init__(self, id_or_url: Union[int, str]):
         if isinstance(id_or_url, int) or id_or_url.isdigit():
             self.book_id = int(id_or_url)
             self.url = f'https://nhentai.net/g/{self.book_id}/'
@@ -52,7 +53,7 @@ class Book:
             else:
                 raise Exception('Error book id_or_url')
 
-        await self.__get_book()
+        # get_loop_and_run(self.__get_book())
         # self.__get_book()
 
     @property
@@ -68,7 +69,7 @@ class Book:
             raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
         if match:
-            data = json.loads(codecs.decode(match[0],'unicode_escape'))
+            data = json.loads(codecs.decode(match[0], 'unicode_escape'))
             self.media_id = data.get('media_id', 0)
             self.upload_date = data.get('upload_date', 0)
             self.tags = [tag.get('name', '') for tag in data.get('tags', [])]
@@ -133,7 +134,9 @@ def gen_forward_message(msg_list, user_id):
 
     return msg_temp
 
+
 HOST = 'https://www.cilitiantang2030.xyz'
+
 
 async def search_mag(kw):
     url = f'{HOST}/search/{kw}_ctime_1.html'
@@ -151,6 +154,7 @@ async def search_mag(kw):
         results.append(result)
 
     return results
+
 
 async def get_mag(url):
     if not url.startswith('http'):
