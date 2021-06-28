@@ -135,12 +135,12 @@ def gen_forward_message(msg_list, user_id):
     return msg_temp
 
 
-HOST = 'https://www.cilitiantang2030.xyz'
+HOST = 'https://www.cilitiantang2031.xyz'
 
 
 async def search_mag(kw):
     url = f'{HOST}/search/{kw}_ctime_1.html'
-    res = request('get', url)
+    res = await async_request('get', url)
     html = etree.HTML(text=res.text)
 
     items = html.xpath('//div[@class="col-md-8"]/div[@class="panel panel-default"]/div[@class="panel-body"]')
@@ -159,7 +159,7 @@ async def search_mag(kw):
 async def get_mag(url):
     if not url.startswith('http'):
         url = HOST + url
-    res = request('get', url)
+    res = await async_request('get', url)
     html = etree.HTML(text=res.text)
 
     mag = html.xpath('//textarea[@id="MagnetLink"]/text()')[0]
