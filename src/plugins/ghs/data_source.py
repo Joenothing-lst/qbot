@@ -64,7 +64,7 @@ class Book:
     def __get_book(self):
         try:
             # res = await async_request('get', self.url)
-            res = requests.get(self.url)
+            res = request('get', self.url, timeout=5)
         except:
             raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
