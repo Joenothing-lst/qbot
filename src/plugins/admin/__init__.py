@@ -186,13 +186,13 @@ async def _(bot: Bot, event: MessageEvent):
         if isall_chinese(api):
             api = pinyin2api(api)
 
-        _input = {}
-        for i in params:
-            k, v = i.split('=', 1)
-            _input[pinyin2api(k) if isall_chinese(k) else k] = v
+        # _input = {}
+        # for i in params:
+        #     k, v = i.split('=', 1)
+        #     _input[pinyin2api(k) if isall_chinese(k) else k] = v
 
-        # param.update(dict(i.split('=', 1) for i in params))
-        param.update(_input)
+        param.update(dict(i.split('=', 1) for i in params))
+        # param.update(_input)
 
         # if MessageSegment.reply in event.message:
         #     ...

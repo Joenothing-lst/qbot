@@ -35,7 +35,7 @@ async def _(bot: Bot, event: MessageEvent):
 
 pcr_id_cmd = on_command('查id', aliases={'cid', })
 
-@pcr_cmd.handle()
+@pcr_id_cmd.handle()
 async def _(bot: Bot, event: MessageEvent):
     msg = str(event.message)
     result = re.findall('\d{9}', msg)
@@ -60,6 +60,5 @@ async def _(bot: Bot, event: MessageEvent):
     else:
         cid = 1
 
-    urls = await get_name(uid, cid)
-    msg = await pcr_news.get_msg([f"{pcr_news.host}{url}" for url in urls])
-    await bot.send(event, Message(msg))
+    res = await get_name(uid, cid)
+    await bot.send(event, Message(res))
