@@ -92,9 +92,6 @@ async def get_name(uid: Union[int, str], sid: Union[int, str] = 1):
 
     data = json.loads(res.text)
 
-    if data['status'] == 'error':
-        return data['msg']
-    else:
-        return data['userName']
+    return data
 
 

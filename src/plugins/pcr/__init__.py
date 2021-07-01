@@ -60,5 +60,12 @@ async def _(bot: Bot, event: MessageEvent):
     else:
         cid = 1
 
-    res = await get_name(uid, cid)
+    data = await get_name(uid, cid)
+
+    if data['status'] == 'error':
+        res = data['msg']
+    else:
+        res = f"您查询的角色id是{uid}\n游戏名称是{data['userName']}"
+
+
     await bot.send(event, Message(res))
