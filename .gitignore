@@ -147,3 +147,4 @@ word_bank/data/*
 .vscode/
 src/plugins/word_bank/data/*
 src/plugins/rua/data/output.gif
+nohup.out
