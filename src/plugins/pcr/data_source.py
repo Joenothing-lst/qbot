@@ -1,4 +1,9 @@
+import re
+import json
+
 from lxml import etree
+from typing import Union
+from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 from src.utils.util import async_request
 
@@ -78,3 +83,18 @@ class PcrWatching:
         if diff_urls:
             msg = await self.get_msg(diff_urls)
             return msg
+
+
+async def get_name(uid: Union[int, str], sid: Union[int, str] = 1):
+    url = f'https://www.pay.so-net.tw/exchange/checkUser?gameCode=SON009&userId={uid}&serverChannelId={sid}'
+
+    res = await async_request('get', url)
+
+    data = json.loads(res.text)
+
+    if data['status'] == 'error':
+        return data['msg']
+    else:
+        return data['userName']
+
+

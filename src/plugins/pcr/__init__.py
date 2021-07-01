@@ -1,3 +1,5 @@
+import re
+
 from nonebot import require, on_command
 from nonebot.adapters.cqhttp.bot import Bot
 from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
@@ -5,7 +7,7 @@ from nonebot.adapters.cqhttp.utils import unescape, escape
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
 from src.utils.util import safe_send
-from .data_source import PcrWatching
+from .data_source import PcrWatching, get_name
 
 scheduler = require('nonebot_plugin_apscheduler').scheduler
 pcr_news = PcrWatching()
@@ -27,5 +29,37 @@ pcr_cmd = on_command('台服新闻')
 @pcr_cmd.handle()
 async def _(bot: Bot, event: MessageEvent):
     urls = await pcr_news.get_news_list()
+    msg = await pcr_news.get_msg([f"{pcr_news.host}{url}" for url in urls])
+    await bot.send(event, Message(msg))
+
+
+pcr_id_cmd = on_command('查id', aliases={'cid', })
+
+@pcr_cmd.handle()
+async def _(bot: Bot, event: MessageEvent):
+    msg = str(event.message)
+    result = re.findall('\d{9}', msg)
+    if result:
+        uid = result[0]
+    else:
+        return None
+
+    result = re.findall('\D([\d一二三])\D', msg)
+    if result:
+        if not result[0].isdigit():
+            if result[0] == '二':
+                cid = 2
+            elif result[0] == '三':
+                cid = 3
+            elif result[0] == '四':
+                cid = 4
+            else:
+                cid = 1
+        else:
+            cid = int(result[0])
+    else:
+        cid = 1
+
+    urls = await get_name(uid, cid)
     msg = await pcr_news.get_msg([f"{pcr_news.host}{url}" for url in urls])
     await bot.send(event, Message(msg))
