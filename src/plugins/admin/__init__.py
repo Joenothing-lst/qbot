@@ -105,19 +105,19 @@ async def request(bot: Bot, event: GroupRequestEvent):
     if event.sub_type == 'invite':
 
         result = request_cmd.new("message",
-                                 permission=SUPERUSER,
+                                 permission=SUPERUSER | PRIVATE,
                                  temp=True,
                                  priority=5)
 
         await bot.send_private_msg(user_id=912871833,
-                                   message=f'有新的群邀请:\n群：{f_group}\n邀请人：{f_user}\n')
+                                   message=f'有新的群邀请:\n群：{f_group}\n邀请人：{f_user}')
 
         request_event = event
 
         @result.handle()
         async def _(bot: Bot, event: MessageEvent):
             msg = 'reject'
-            if 'y' or '1' in str(event.message):
+            if str(event.message) in ['yes', '1']:
                 msg = 'approve'
                 await request_event.approve(bot)
             else:
