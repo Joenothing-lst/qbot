@@ -1,3 +1,4 @@
+from lxml import etree
 from feedparser import parse, FeedParserDict
 from typing import Union, Dict, Tuple
 
@@ -21,16 +22,23 @@ class RssHub:
         self.kwargs = kwargs
 
     @staticmethod
-    async def async_parse(rss_url: str = None, **kwargs) -> FeedParserDict:
+    async def async_parse(rss_url: str = None, item_xpath_map: dict = None, **kwargs) -> FeedParserDict:
         """
         使用异步 get 请求解析 rss 链接，返回解析后的 FeedParserDict 对象
 
         :param rss_url: 默认使用初始化时的 rss 订阅链接
+        :item_xpath_map: 自定义映射关系
         :param kwargs: 请求使用的参数
         :return: FeedParserDict 对象
         """
         res = await async_request('get', rss_url, **kwargs)
-        rss_dict = parse(res)
+        if item_xpath_map:
+            html = etree.HTML(text=res.text)
+            rss_dict = {}
+            for k, v in item_xpath_map:
+                rss_dict[k] = html.xpath(v).get()
+        else:
+            rss_dict = parse(res)
         return rss_dict
 
     def check_rss(self, items: Union[FeedParserDict, list], path_to_items: str = 'entries') -> list:
