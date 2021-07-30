@@ -34,8 +34,8 @@ def get_loop():
     return asyncio.get_running_loop()
 
 def get_loop_and_run(coro):
-    task = asyncio.create_task(coro)
-    get_loop().run_until_complete(task)
+    loop = get_loop()
+    task = loop.create_task(coro)
     return task.result()
 
 def wrapper(api: str, params: dict):
