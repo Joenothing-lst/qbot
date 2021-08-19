@@ -148,3 +148,4 @@ word_bank/data/*
 src/plugins/word_bank/data/*
 src/plugins/rua/data/output.gif
 nohup.out
+.png

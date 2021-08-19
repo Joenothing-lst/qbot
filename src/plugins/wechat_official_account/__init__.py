@@ -49,7 +49,7 @@ async def _(bot: Bot, event: MessageEvent, state: T_State):
     if cmd.login:
         username, password = param.split(None, 1)
         img_path = await vx.get_login_qrcode(username, password)
-        await bot.send(event, message=MessageSegment.image(file=f'file:///{img_path}'))
+        await bot.send(event, message=MessageSegment.image(file=f'file://{img_path}'))
         await vx.login(username)
         await bot.send(event, message='登录成功')
 
