@@ -23,7 +23,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     msg = f'找到关键词【{params}】的本子'
 
     forward_msg = gen_forward_message(
-        [msg] + [f"id：{book['book_id']}\n名称：{book['title']}\n" for book in
+        [msg] + [f"id：{book['book_id']}\n名称：{book['title']}\n{MessageSegment.image(file=book['cover'])}" for book in
                  books],
         event.sender.user_id)
 

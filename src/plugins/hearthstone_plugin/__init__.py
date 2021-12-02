@@ -28,7 +28,7 @@ def check_base64() -> Rule:
     return Rule(_check_base64)
 
 
-hs_api = on_message(rule=check_base64(), permission=SUPERUSER)
+hs_api = on_message(rule=check_base64())
 
 
 @hs_api.handle()

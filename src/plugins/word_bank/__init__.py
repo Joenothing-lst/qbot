@@ -31,14 +31,14 @@ async def _(bot: Bot, event: MessageEvent):
         if reply_type == 'random':
             msg = random.choice(msgs)
 
-            duration = parse_ban(msg)
+            duration, msg_p = parse_ban(msg)
             if duration and isinstance(event, GroupMessageEvent):
                 await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=duration)
 
             await bot.send(event,
                            message=Message(
                                unescape(
-                                   parse(msg=msg,
+                                   parse(msg=msg_p,
                                          nickname=event.sender.card or event.sender.nickname,
                                          sender_id=event.sender.user_id)
                                )
@@ -47,14 +47,14 @@ async def _(bot: Bot, event: MessageEvent):
 
         else:
             for msg in msgs:
-                duration = parse_ban(msg)
+                duration, msg_p = parse_ban(msg)
                 if duration and isinstance(event, GroupMessageEvent):
                     await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=duration)
 
                 await bot.send(event,
                                message=Message(
                                    unescape(
-                                       parse(msg=msg,
+                                       parse(msg=msg_p,
                                              nickname=event.sender.card or event.sender.nickname,
                                              sender_id=event.sender.user_id)
                                    )
