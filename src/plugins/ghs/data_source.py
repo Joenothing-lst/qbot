@@ -79,11 +79,11 @@ class Book:
 
     # async def __get_book(self):
     def __get_book(self):
-        try:
+        # try:
             # res = await async_request('get', self.url)
-            res = request('get', self.url, headers=headers, timeout=5)
-        except:
-            raise Exception('Error network')
+        res = request('get', self.url, headers=headers, timeout=5)
+        # except:
+        #     raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
         if match:
             data = json.loads(codecs.decode(match[0], 'unicode_escape'))
