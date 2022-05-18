@@ -9,7 +9,24 @@ from nonebot.adapters.cqhttp.message import Message, MessageSegment
 ###
 import requests
 
-
+headers = {
+    'authority': 'nhentai.net',
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'cache-control': 'no-cache',
+    # Requests sorts cookies= alphabetically
+    'cookie': 'cf_chl_2=1579ada695f30b6; cf_chl_prog=x13; cf_clearance=HXtWYDkNp56WGdq_Zs7KBpGxwswpB59IjFevFd6.7zI-1652859641-0-150; csrftoken=3v7ZND7BsFGKijakyTGjzxSusXwmTGDkhvsY1tmj9kGtKl75nP5RP32dulHrEZcu',
+    'pragma': 'no-cache',
+    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"macOS"',
+    'sec-fetch-dest': 'document',
+    'sec-fetch-mode': 'navigate',
+    'sec-fetch-site': 'none',
+    'sec-fetch-user': '?1',
+    'upgrade-insecure-requests': '1',
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
+}
 ###
 
 
@@ -64,7 +81,7 @@ class Book:
     def __get_book(self):
         try:
             # res = await async_request('get', self.url)
-            res = request('get', self.url, timeout=5)
+            res = request('get', self.url, headers=headers, timeout=5)
         except:
             raise Exception('Error network')
         match = re.findall('''JSON\.parse\(["'](.+?)["']\)''', res.text)
