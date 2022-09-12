@@ -59,8 +59,8 @@ def main(model):
                                     'pickupSearchQuote'])
         if store_stock != '暂无供应':
             yield f'{name}有货, {store_stock}'
-        else:
-            yield f'{name}{store_stock}'
+        # else:
+        #     yield f'{name}{store_stock}'
 
 
 @scheduler.scheduled_job('cron', second='*/3', id='iphone_monitor')
