@@ -1,0 +1,72 @@
+from functools import reduce
+
+import requests
+from nonebot import require
+
+from src.utils.util import safe_send
+
+scheduler = require('nonebot_plugin_apscheduler').scheduler
+
+headers = {
+    'Host': 'www.apple.com.cn',
+    'accept': '*/*',
+    'content-type': 'application/json',
+    'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E217 MicroMessenger/6.8.0(0x16080000) NetType/WIFI Language/en Branch/Br_trunk MiniProgramEnv/Mac',
+    # 'referer': 'https://servicewechat.com/wx09dd4aff96ba65c1/104/page-frame.html',
+    'accept-language': 'zh-CN,zh-Hans;q=0.9',
+}
+
+
+def getitem(a, b):
+    if isinstance(b, list):
+        return a[b[0]]
+    else:
+        return a[b]
+
+
+def lookup(data, keys, default=None):
+    """
+    根据路径查找对象
+
+    :param data: 需要被查找的对象
+    :param keys: 索引列表
+    :param default: 默认结果
+    :return:
+    """
+    try:
+        r = reduce(getitem, keys, data)
+    except KeyError:
+        r = default
+    except IndexError:
+        r = default
+    except TypeError:
+        r = default
+
+    return r or default
+
+
+def main():
+    stores = {
+        'R471': '西湖店',
+        'R532': '万象店'
+    }
+    model = 'MQ8A3CH/A'
+
+    for store, name in stores.items():
+        url = f'https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mt=compact&parts.0={model}&store={store}'
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        store_stock = lookup(data, ['body', 'content', 'pickupMessage', 'stores', [0], 'partsAvailability', model,
+                                    'pickupSearchQuote'])
+        if store_stock == '暂无供应':
+            yield False
+        else:
+            print(f'{name}有货, {store_stock}')
+            yield True
+
+
+@scheduler.scheduled_job('cron', second='*/3', id='iphone_monitor')
+async def _():
+    if any(main()):
+        await safe_send('private', 912871833,
+                        'go to https://secure5.www.apple.com.cn/shop/checkout?_s=Fulfillment-init')
