@@ -70,6 +70,3 @@ async def _():
     if any(main()):
         await safe_send('private', 912871833,
                         'go to https://secure5.www.apple.com.cn/shop/checkout?_s=Fulfillment-init')
-
-    else:
-        await safe_send('private', 912871833, '暂无供应')
