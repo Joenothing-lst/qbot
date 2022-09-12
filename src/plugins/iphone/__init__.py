@@ -45,12 +45,11 @@ def lookup(data, keys, default=None):
     return r or default
 
 
-def main():
+def main(model):
     stores = {
         'R471': '西湖店',
         'R532': '万象店'
     }
-    model = 'MQ8A3CH/A'
 
     for store, name in stores.items():
         url = f'https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mt=compact&parts.0={model}&store={store}'
@@ -58,15 +57,15 @@ def main():
         data = response.json()
         store_stock = lookup(data, ['body', 'content', 'pickupMessage', 'stores', [0], 'partsAvailability', model,
                                     'pickupSearchQuote'])
-        if store_stock == '暂无供应':
-            yield False
+        if store_stock != '暂无供应':
+            yield f'{name}有货, {store_stock}'
         else:
-            print(f'{name}有货, {store_stock}')
-            yield True
+            yield f'{name}{store_stock}'
 
 
 @scheduler.scheduled_job('cron', second='*/3', id='iphone_monitor')
 async def _():
-    if any(main()):
-        await safe_send('private', 912871833,
-                        'go to https://secure5.www.apple.com.cn/shop/checkout?_s=Fulfillment-init')
+    model = 'MQ8A3CH/A'
+
+    for msg in main(model):
+        await safe_send('private', 912871833, msg)
