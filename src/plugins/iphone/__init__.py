@@ -61,8 +61,8 @@ def main(model):
         model_name = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'messageTypes', 'compact', 'storePickupProductTitle'])
         if store_stock != '暂无供应':
             yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」有货, {store_stock}'
-        else:
-            yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」{store_stock}'
+        # else:
+        #     yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」{store_stock}'
 
 
 @scheduler.scheduled_job('cron', second='*/2', id='iphone_monitor')
