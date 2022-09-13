@@ -51,20 +51,23 @@ def main(model):
         'R532': '万象店'
     }
 
-    for store, name in stores.items():
+    for store in stores:
         url = f'https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mt=compact&parts.0={model}&store={store}'
         response = requests.get(url, headers=headers)
         data = response.json()
-        store_stock = lookup(data, ['body', 'content', 'pickupMessage', 'stores', [0], 'partsAvailability', model,
+        pickup_message = lookup(data, ['body', 'content', 'pickupMessage'])
+        store_stock = lookup(pickup_message, ['stores', [0], 'partsAvailability', model,
                                     'pickupSearchQuote'])
+        model_name = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'messageTypes', 'compact', 'storePickupProductTitle'])
         if store_stock != '暂无供应':
-            yield f'{name}有货, {store_stock}'
-        # else:
-        #     yield f'{name}{store_stock}'
+            yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」有货, {store_stock}'
+        else:
+            yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」{store_stock}'
 
 
 @scheduler.scheduled_job('cron', second='*/3', id='iphone_monitor')
 async def _():
+    # iPhone 14 Pro Max 256G 暗夜紫
     model = 'MQ8A3CH/A'
 
     for msg in main(model):
