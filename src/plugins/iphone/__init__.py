@@ -58,7 +58,7 @@ def main(model):
         pickup_message = lookup(data, ['body', 'content', 'pickupMessage'])
         stock_state = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'pickupDisplay'])
 
-        if stock_state != 'available':
+        if stock_state == 'available':
             store_stock = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'pickupSearchQuote'])
             model_name = lookup(pickup_message,
                                 ['stores', [0], 'partsAvailability', model, 'messageTypes', 'compact', 'storePickupProductTitle'])
