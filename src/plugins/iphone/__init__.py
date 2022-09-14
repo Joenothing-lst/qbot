@@ -56,10 +56,12 @@ def main(model):
         response = requests.get(url, headers=headers)
         data = response.json()
         pickup_message = lookup(data, ['body', 'content', 'pickupMessage'])
-        store_stock = lookup(pickup_message, ['stores', [0], 'partsAvailability', model,
-                                    'pickupSearchQuote'])
-        model_name = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'messageTypes', 'compact', 'storePickupProductTitle'])
-        if store_stock != '暂无供应':
+        stock_state = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'pickupDisplay'])
+
+        if stock_state != 'available':
+            store_stock = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'pickupSearchQuote'])
+            model_name = lookup(pickup_message,
+                                ['stores', [0], 'partsAvailability', model, 'messageTypes', 'compact', 'storePickupProductTitle'])
             yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」有货, {store_stock}'
         # else:
         #     yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」{store_stock}'
@@ -69,6 +71,8 @@ def main(model):
 async def _():
     # iPhone 14 Pro Max 256G 暗夜紫
     model = 'MQ8A3CH/A'
+    # iPhone 14 Plus 256G 红色
+    # model = 'MQ3F3CH/A'
 
     for msg in main(model):
         await safe_send('private', 912871833, msg)
