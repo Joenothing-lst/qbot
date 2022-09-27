@@ -54,7 +54,7 @@ def main(model):
     for store in stores:
         url = f'https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mt=compact&parts.0={model}&store={store}'
         response = requests.get(url, headers=headers)
-        print(response.ok, response.text)
+        # print(response.ok, response.text)
         data = response.json()
         pickup_message = lookup(data, ['body', 'content', 'pickupMessage'])
         stock_state = lookup(pickup_message, ['stores', [0], 'partsAvailability', model, 'pickupDisplay'])
