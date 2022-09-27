@@ -27,6 +27,8 @@ def parse_ban(msg: str) -> (int, str):
         duration = matcher[0]
         # 默认 5 分钟
         return int(duration.strip() or 300), re.sub(r'/ban[ \d]*', "", msg)
+    else:
+        return None, msg
 
 
 def parse(msg, **kwargs):
