@@ -71,9 +71,9 @@ def main(model):
 @scheduler.scheduled_job('cron', second='*/2', id='iphone_monitor')
 async def _():
     # iPhone 14 Pro Max 256G 暗夜紫
-    model = 'MQ8A3CH/A'
-    # iPhone 14 Plus 256G 红色
-    # model = 'MQ3F3CH/A'
+    # model = 'MQ8A3CH/A'
+    # iPhone 14 Pro 256G 暗夜紫
+    model = 'MQ1C3CH/A'
 
     for msg in main(model):
-        await safe_send('private', 912871833, msg)
+        await safe_send('private', 744537560, msg)
