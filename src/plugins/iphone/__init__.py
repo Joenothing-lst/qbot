@@ -68,7 +68,7 @@ def main(model):
         #     yield f'【{lookup(pickup_message, ["pickupLocation"], "")}】-「{model_name}」{store_stock}'
 
 
-@scheduler.scheduled_job('cron', second='*/2', id='iphone_monitor')
+@scheduler.scheduled_job('cron', second='*/3', id='iphone_monitor')
 async def _():
     # iPhone 14 Pro Max 256G 暗夜紫
     # model = 'MQ8A3CH/A'
