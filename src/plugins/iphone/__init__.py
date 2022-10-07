@@ -77,3 +77,4 @@ async def _():
 
     for msg in main(model):
         await safe_send('private', 744537560, msg)
+        await safe_send('private', 912871833, msg)
