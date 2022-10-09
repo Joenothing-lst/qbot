@@ -73,11 +73,11 @@ async def _():
     # iPhone 14 Pro Max 256G 暗夜紫
     model = 'MQ8A3CH/A'
 
-    for msg in main(model):
-        await safe_send('private', 912871833, msg)
-
-    # iPhone 14 Pro 256G 暗夜紫
-    model = 'MQ1C3CH/A'
-
-    for msg in main(model):
-        await safe_send('private', 744537560, msg)
+    # for msg in main(model):
+    #     await safe_send('private', 912871833, msg)
+    #
+    # # iPhone 14 Pro 256G 暗夜紫
+    # model = 'MQ1C3CH/A'
+    #
+    # for msg in main(model):
+    #     await safe_send('private', 744537560, msg)
