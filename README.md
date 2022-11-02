@@ -1,7 +1,3 @@
 # qbot
 
-## How to start
-
-1. generate project using `nb create` .
-2. writing your plugins under `src/plugins` folder.
-3. run your bot using `nb run` .
+遵循 [NoneBot2](https://v2.nonebot.dev/) 标准开发的个人机器人
