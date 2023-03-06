@@ -17,7 +17,7 @@ chatgpt = on_message()
 async def _(bot: Bot, event: MessageEvent):
     if event.to_me:
         print(bot.config.__dict__)
-        token = bot.config.PERSONAL_API_KEY
+        token = bot.config.personal_api_key
         uid = event.user_id
         msg = unescape(str(event.message))
         print(token, uid, msg)
