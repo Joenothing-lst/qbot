@@ -6,7 +6,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.utils import unescape, escape
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
-from src.plugins.chatgpt.data_source import chat
+from .data_source import chat
 
 
 
