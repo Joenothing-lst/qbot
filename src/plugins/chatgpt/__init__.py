@@ -10,7 +10,7 @@ from .data_source import chat
 
 
 
-chatgpt = on_message(priority=990)
+chatgpt = on_message(priority=98, block=False)
 
 
 @chatgpt.handle()
