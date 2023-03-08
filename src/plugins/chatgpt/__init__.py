@@ -6,7 +6,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
 from nonebot.adapters.cqhttp.utils import unescape, escape
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 
-from .data_source import chat
+from .data_source import chat, is_user
 
 
 
@@ -20,6 +20,10 @@ async def _(bot: Bot, event: MessageEvent):
         uid = event.user_id
         msg = unescape(str(event.message))
         if any(i in msg for i in ['assistant', 'vanilla', 'makise', 'pcr_kokoro']):
+            reply = chat(token, uid, msg)
+            await bot.send(event, Message(reply))
+
+        elif is_user(token, uid):
             reply = chat(token, uid, msg)
             await bot.send(event, Message(reply))
 
