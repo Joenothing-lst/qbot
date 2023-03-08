@@ -19,6 +19,7 @@ async def _(bot: Bot, event: MessageEvent):
         token = bot.config.personal_api_key
         uid = event.user_id
         msg = unescape(str(event.message))
-        reply = chat(token, uid, msg)
-        await bot.send(event, Message(reply))
+        if any(i in msg for i in ['assistant', 'vanilla', 'makise', 'pcr_kokoro']):
+            reply = chat(token, uid, msg)
+            await bot.send(event, Message(reply))
 
