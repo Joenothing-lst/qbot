@@ -1,14 +1,11 @@
 from nonebot import on_message
 # from nonebot.permission import SUPERUSER
-from nonebot.typing import T_State
 from nonebot.adapters.cqhttp.bot import Bot
-from nonebot.adapters.cqhttp.event import MessageEvent, GroupMessageEvent
-from nonebot.adapters.cqhttp.utils import unescape, escape
+from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
+from nonebot.adapters.cqhttp.utils import unescape
 
 from .data_source import chat, is_user
-
-
 
 chatgpt = on_message(priority=98, block=False)
 
@@ -25,8 +22,7 @@ async def _(bot: Bot, event: MessageEvent):
 
         elif is_user(token, uid):
             reply = chat(token, uid, msg)
-            print(event.message_type)
+            reply_msg = MessageSegment.text(reply)
             if event.message_type == 'group':
-                reply = MessageSegment.reply(event.message_id) + Message(reply)
-            await bot.send(event, Message(reply))
-
+                reply_msg = MessageSegment.reply(event.message_id) + reply_msg
+            await bot.send(event, reply_msg)
