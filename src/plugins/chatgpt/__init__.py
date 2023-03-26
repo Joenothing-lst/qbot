@@ -27,6 +27,6 @@ async def _(bot: Bot, event: MessageEvent):
             reply = chat(token, uid, msg)
             print(event.message_type)
             if event.message_type == 'group':
-                reply = MessageSegment.at(event.user_id) + Message(reply)
+                reply = MessageSegment.reply(event.message_id) + Message(reply)
             await bot.send(event, Message(reply))
 
