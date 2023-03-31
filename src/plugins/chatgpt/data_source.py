@@ -22,7 +22,7 @@ def is_user_living(token, uid):
 
 
 def set_user_living(token, uid):
-    url = f"http://127.0.0.1/OpenaiApi/chatgpt/set_user_living?token={token}&uid={uid}&is_living=ture"
+    url = f"http://127.0.0.1/OpenaiApi/chatgpt/set_user_living?token={token}&uid={uid}&is_living=1"
     res = requests.get(url).json()
 
     if res['code'] == 200:
