@@ -23,7 +23,7 @@ async def _(bot: Bot, event: MessageEvent):
     elif '结束对话' in msg:
         # 结束用户的对话
         if clean_context(token, uid) == 'success':
-            await bot.send(event, '已结束对话')
+            await bot.send(event, 'OK~')
 
     elif (event.to_me and set_user_living(token, uid) == 'success') or is_user_living(token, uid):
         reply = chat(token, uid, msg)
