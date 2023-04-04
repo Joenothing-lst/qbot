@@ -25,8 +25,10 @@ async def _(bot: Bot, event: MessageEvent):
         if clean_context(token, uid) == 'success':
             await bot.send(event, 'OK~')
 
-    elif (event.to_me and set_user_living(token, uid) == 'success') or is_user_living(token, uid):
+    elif event.to_me or is_user_living(token, uid):
         reply = chat(token, uid, msg)
+        if event.to_me:
+            set_user_living(token, uid)
         reply_msg = MessageSegment.text(reply)
         if event.message_type == 'group':
             reply_msg = MessageSegment.reply(event.message_id) + reply_msg

@@ -16,9 +16,9 @@ def is_user_living(token, uid):
     res = requests.get(url).json()
 
     if res['code'] == 200:
-        return res['data']['is_user_living']
+        return True
     else:
-        return res['msg']
+        return False
 
 
 def set_user_living(token, uid):
