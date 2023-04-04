@@ -5,7 +5,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 from nonebot.adapters.cqhttp.utils import unescape
 
-from .data_source import chat, is_user_living, set_user_living
+from .data_source import chat, is_user, is_user_living, set_user_living
 
 chatgpt = on_message(priority=98, block=False)
 
@@ -15,6 +15,7 @@ async def _(bot: Bot, event: MessageEvent):
     token = bot.config.personal_api_key
     uid = event.user_id
     msg = unescape(str(event.message))
+
     if event.to_me and any(i in msg for i in ['assistant', 'vanilla', 'makise', 'pcr_kokoro']):
         # 创建用户/角色
         reply = chat(token, uid, msg)
@@ -25,11 +26,12 @@ async def _(bot: Bot, event: MessageEvent):
         if set_user_living(token, uid, False) == 'success':
             await bot.send(event, 'OK~')
 
-    elif event.to_me or is_user_living(token, uid):
-        reply = chat(token, uid, msg)
-        if event.to_me:
-            set_user_living(token, uid)
-        reply_msg = MessageSegment.text(reply)
-        if event.message_type == 'group':
-            reply_msg = MessageSegment.reply(event.message_id) + reply_msg
-        await bot.send(event, reply_msg)
+    elif is_user(token, uid):
+        if event.to_me or is_user_living(token, uid):
+            reply = chat(token, uid, msg)
+            if event.to_me:
+                set_user_living(token, uid)
+            reply_msg = MessageSegment.text(reply)
+            if event.message_type == 'group':
+                reply_msg = MessageSegment.reply(event.message_id) + reply_msg
+            await bot.send(event, reply_msg)
