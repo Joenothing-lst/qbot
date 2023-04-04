@@ -5,7 +5,7 @@ from nonebot.adapters.cqhttp.event import MessageEvent
 from nonebot.adapters.cqhttp.message import Message, MessageSegment
 from nonebot.adapters.cqhttp.utils import unescape
 
-from .data_source import chat, is_user_living, set_user_living, clean_context
+from .data_source import chat, is_user_living, set_user_living
 
 chatgpt = on_message(priority=98, block=False)
 
@@ -22,7 +22,7 @@ async def _(bot: Bot, event: MessageEvent):
 
     elif '结束对话' in msg:
         # 结束用户的对话
-        if clean_context(token, uid) == 'success':
+        if set_user_living(token, uid, False) == 'success':
             await bot.send(event, 'OK~')
 
     elif event.to_me or is_user_living(token, uid):

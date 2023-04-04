@@ -21,18 +21,8 @@ def is_user_living(token, uid):
         return False
 
 
-def set_user_living(token, uid):
-    url = f"http://127.0.0.1/OpenaiApi/chatgpt/set_user_living?token={token}&uid={uid}&is_living=1"
-    res = requests.get(url).json()
-
-    if res['code'] == 200:
-        return res['msg']
-    else:
-        return res['msg']
-
-
-def clean_context(token, uid):
-    url = f"http://127.0.0.1/OpenaiApi/chatgpt/clean_context?token={token}&uid={uid}"
+def set_user_living(token, uid, living: bool = True):
+    url = f"http://127.0.0.1/OpenaiApi/chatgpt/set_user_living?token={token}&uid={uid}&is_living={int(living)}"
     res = requests.get(url).json()
 
     if res['code'] == 200:
